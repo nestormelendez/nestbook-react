@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../constants";
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -21,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     const userEmail = loginData.get("userEmail");
     const userPassword = loginData.get("userPassword");
 
-    const API_URL = "https://nestbook-backend.onrender.com";
+    
     let token = "";
     const myHeaderLogin = new Headers();
     myHeaderLogin.append("Content-type", "application/json");

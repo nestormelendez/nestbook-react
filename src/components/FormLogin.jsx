@@ -4,7 +4,6 @@ import { useAuth } from "../Hooks/useAuth";
 import Button from "./Button";
 import Input from "./Input.jsx";
 
-import TimeoutComponent from "./SetTimeOut.jsx";
 
 export function FormLogin() {
   const navigate = useNavigate();
@@ -30,11 +29,9 @@ export function FormLogin() {
       />
       <div className="error-container">
         {error ? (
-          <TimeoutComponent
-            time={3500}
-            initialMessage={`El usuario o la contraseña no estan registrados...`}
-            secondaryMessage={""}
-          />
+          <p className="error-text">
+            El usuario o la contraseña no estan registrados...
+          </p>
         ) : (
           <p></p> // Si isLoggedIn es false
         )}
