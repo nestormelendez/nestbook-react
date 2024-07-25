@@ -1,187 +1,151 @@
+import { useEffect } from "react";
+import { API_URL } from "../constants";
+import useFetchPosts from "../Hooks/useFetchPost";
 import { handleClick } from "../services/FuntionClick";
-import { AvatarProfile } from "./AvatarProfile";
-import Button from "./Button";
-import { InputCommets } from "./Input";
-import {
-  SvgComment,
-  SvgCommentCount,
-  SvgEllipsis,
-  SvgPaperPlane,
-  SvgShare,
-  SvgThumbsUp,
-  SvgXMark,
-} from "./SvgHomeHeader";
-import { PostCommentAsideOwnBtn } from "./postCommentAsideOwnBtn";
-import { PostCommentAsideOtherBtn } from "./postCommentAsideOtherBtn";
+import { CommentsOwn } from "./CommentsOwn";
+import { CommentsOther } from "./CommentsOther";
 
-export function Posts() {
+import { CreateNewPost } from "./CreateNewPost";
+import { useAuth } from "../Hooks/useAuth";
+import { PostOwn } from "./PostsOwn";
+import { PostOther } from "./PostOther";
+
+export function Posts({ search }) {
+  const { data, isLoading, error, fetchPosts } = useFetchPosts();
+  const { userData } = useAuth();
+  const token = localStorage.getItem("token");
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${token}`);
+  useEffect(() => {
+    fetchPosts({
+      url: `${API_URL}/posts`,
+      method: "GET",
+      headers: myHeaders,
+    });
+  }, []);
+
+  if (isLoading) {
+    return <div>Cargando...</div>;
+  }
+
+  if (error) {
+    return <div>Error al obtener los Posts: {error.message}</div>;
+  }
+  console.log(data);
+
+  // crear los post
+
+  // tengo que hacer un fetch para traer la lista de usuarios con id
+
+  // tengo que traer con fetch los comentarior y armarlos donde correspondan su postID,
+
+  // tengo que traer con fetch los likes y armarlos donde correspondan sus postID
+  // convertir las fechas de creacion de post y comment en hace tanto tiempo... (Moment)
+  //funcion de sumar likes
+  //funcion de submit comment
+  // funcion de recargar la pagina al crear un post, likes y comment
+
+  console.log(data);
+
   return (
     <main className="container-post-header">
-      <article className="content-post">
-        <header className="post-header">
-          <div className="post-header-user">
-            <article className="post-header-user-profile">
-              <AvatarProfile />
-              <div className="data-user-post">
-                <h2>Nestor</h2>
-                <span>1 d</span>
-              </div>
-            </article>
-            <div className="btns-options">
-            <PostCommentAsideOwnBtn />
-            <PostCommentAsideOtherBtn />
-              <Button className={"btn delete-post"} onClick={handleClick}>
-                <SvgXMark />
-              </Button>
-            </div>
-          </div>
-        </header>
-        <div className="container">
-          <span className="post">
-            <h3>La mejor familia del mundo !!!</h3>
-            <img className="img-post" src="./src\assets\nestor.jpg" alt="" />
-          </span>
-          <div className="post-likes-comments">
-            <div className="flex">
-              <SvgThumbsUp width={"1.3em"} fill={"#0866ff"} />
-              <h3>10</h3>
-            </div>
-            <div className="flex">
-              <SvgCommentCount width={"1.3em"} fill={"#b0b2b5"} />
-              <h3>5</h3>
-            </div>
-          </div>
+      <CreateNewPost />
+
+      {data ? (
+        data
+          .reverse()
+          .filter((post) => {
+            return post.content.toLowerCase().includes(search.toLowerCase());
+          })
+          .map((post) => {
+            console.log(data);
+            return post.userId === userData.id ? (
+              <PostOwn
+                key={post.id}
+                publisherName={post.user.name}
+                timeAgoPost={post.createdAt}
+                urlImagePublisher={
+                  post.image
+                    ? `${API_URL}/${post.image}`
+                    : "./src/assets/nestor.jpg"
+                }
+                postContent={post.content}
+                postId={post.id}
+              >
+                {post.comments.reverse().map((comment) => {
+                  console.log(data.comments);
+                  return comment.userId === userData.id ? (
+                    <CommentsOwn
+                      key={comment.id}
+                      comment={comment.text}
+                      commentator={comment.user.name}
+                      urlImage={comment.user.photo}
+                      timeAgo={comment.createdAt}
+                      handleClickLikes={handleClick}
+                      handleClickComment={handleClick}
+                      commentId={comment.id}
+                    />
+                  ) : (
+                    <CommentsOther
+                      key={comment.id}
+                      comment={comment.text}
+                      commentator={comment.user.name}
+                      urlImage={comment.user.photo}
+                      timeAgo={comment.createdAt}
+                      handleClickLikes={handleClick}
+                      handleClickComment={handleClick}
+                      commentId={comment.id}
+                    />
+                  );
+                })}
+              </PostOwn>
+            ) : (
+              <PostOther
+                key={post.id}
+                publisherName={post.user.name}
+                timeAgoPost={post.createdAt}
+                urlImagePublisher={
+                  post.image
+                    ? `${API_URL}/${post.image}`
+                    : "./src/assets/nestor.jpg"
+                }
+                postContent={post.content}
+                postId={post.id}
+              >
+                {post.comments.reverse().map((comment) => {
+                  return comment.userId === userData.id ? (
+                    <CommentsOwn
+                      key={comment.id}
+                      comment={comment.text}
+                      commentator={comment.user.name}
+                      urlImage={comment.user.photo}
+                      timeAgo={comment.createdAt}
+                      handleClickLikes={handleClick}
+                      handleClickComment={handleClick}
+                      commentId={comment.id}
+                    />
+                  ) : (
+                    <CommentsOther
+                      key={comment.id}
+                      comment={comment.text}
+                      commentator={comment.user.name}
+                      urlImage={comment.user.photo}
+                      timeAgo={comment.createdAt}
+                      handleClickLikes={handleClick}
+                      handleClickComment={handleClick}
+                      commentId={comment.id}
+                    />
+                  );
+                })}
+              </PostOther>
+            );
+          })
+      ) : (
+        <div>
+          {" "}
+          <span>No hay post en el backend</span>
         </div>
-        <footer className="btns-likes-comments">
-          <Button className={"btn --btn-post btn-like"} onClick={handleClick}>
-            <SvgThumbsUp width={"1.4em"} fill={"#b0b2b5"} />
-            <span>Me gusta</span>
-          </Button>
-
-          <Button className={"btn --btn-post btn-like"} onClick={handleClick}>
-            <SvgComment width={"1.4em"} fill={"#b0b2b5"} />
-            <span>Comentar</span>
-          </Button>
-
-          <Button className={"btn --btn-post btn-like"} onClick={handleClick}>
-            <SvgShare width={"1.4em"} fill={"#b0b2b5"} />
-            <span>Compartir</span>
-          </Button>
-        </footer>
-
-        <article className="container-comment">
-          <div className="post-header-user">
-            <section className="photo-profile-avatar-comment-left">
-              <div className="photo-profile-avatar-comment">
-                <span>L</span>
-              </div>
-              <div className="data-user-post">
-                <article className="post-comment-header">
-                  <h2> Leonel</h2>
-                  <div className="post-comment">
-                    <span>
-                      esto es un Comentario esto es un Comentario esto es un
-                      Comentario esto es un Comentario esto es un Comentario
-                      esto es un Comentario esto es un Comentarioesto es un
-                      Comentarioesto es un Comentarioesto es un Comentario esto
-                      es un Comentario esto es un Comentario esto es un
-                      Comentario esto es un Comentario esto es un Comentario
-                      esto es un Comentario esto es un Comentarioesto es un
-                      Comentario
-                    </span>
-                  </div>
-                </article>
-                <div className="post-comment-footer">
-                  <span>Hace 4 minutos</span>
-                  <Button className={"btn"} onClick={handleClick}>
-                    <span>Me gusta</span>
-                  </Button>
-                  <Button className={"btn"} onClick={handleClick}>
-                    <span>Responder</span>
-                  </Button>
-                </div>
-              </div>
-            </section>
-
-            <PostCommentAsideOwnBtn />
-            <PostCommentAsideOtherBtn />
-          </div>
-
-          <div className="post-header-user">
-            <section className="photo-profile-avatar-comment-left">
-              <div className="photo-profile-avatar-comment">
-                <span>L</span>
-              </div>
-              <div className="data-user-post">
-                <article className="post-comment-header">
-                  <h2> Leonel</h2>
-                  <div className="post-comment">
-                    <span>
-                      esto es un Comentario esto es un Comentario esto es un
-                      Comentario esto es un Comentario esto es un Comentario
-                      esto es un Comentario esto es un Comentarioesto es un
-                      Comentarioesto es un Comentarioesto es un Comentario esto
-                    </span>
-                  </div>
-                </article>
-                <div className="post-comment-footer">
-                  <span>Hace 4 minutos</span>
-                  <Button className={"btn"} onClick={handleClick}>
-                    <span>Me gusta</span>
-                  </Button>
-                  <Button className={"btn"} onClick={handleClick}>
-                    <span>Responder</span>
-                  </Button>
-                </div>
-              </div>
-            </section>
-
-            <PostCommentAsideOwnBtn />
-            <PostCommentAsideOtherBtn />
-          </div>
-          <div className="post-header-user">
-            <section className="photo-profile-avatar-comment-left">
-              <div className="photo-profile-avatar-comment">
-                <span>L</span>
-              </div>
-              <div className="data-user-post">
-                <article className="post-comment-header">
-                  <h2> Leonel</h2>
-                  <div className="post-comment">
-                    <span>esto es un Comentario esto Comentario</span>
-                  </div>
-                </article>
-                <div className="post-comment-footer">
-                  <span>Hace 4 minutos</span>
-                  <Button className={"btn"} onClick={handleClick}>
-                    <span>Me gusta</span>
-                  </Button>
-                  <Button className={"btn"} onClick={handleClick}>
-                    <span>Responder</span>
-                  </Button>
-                </div>
-              </div>
-            </section>
-
-            <PostCommentAsideOwnBtn />
-            <PostCommentAsideOtherBtn />
-          </div>
-
-          <div className="post-contents">
-            <div className="post-header-user">
-              <AvatarProfile />
-              <InputCommets
-                type={"text"}
-                placeholder={"Comentar como Nestor"}
-                onChange={handleClick}
-              />
-              <Button className={"btn --btn-comment"} onClick={handleClick}>
-                <SvgPaperPlane />
-              </Button>
-            </div>
-          </div>
-        </article>
-      </article>
+      )}
     </main>
   );
 }

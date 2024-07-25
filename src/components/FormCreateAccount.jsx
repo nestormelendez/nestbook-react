@@ -22,8 +22,8 @@ const months = [
   "Diciembre",
 ];
 const years = Array.from({ length: 100 }, (_, i) => 1925 + i).reverse();
+
 export function FormCreateAccount() {
-  
   const [selectValueDay, setSelectValueDay] = useState("");
   const [selectValueMonth, setSelectValueMonth] = useState("");
   const [selectValueYear, setSelectValueYear] = useState("");
@@ -42,27 +42,16 @@ export function FormCreateAccount() {
   const { isLoading, error, data, fetchData } = useFetchCreateAccocunt();
 
   const useCreateAccount = async (e) => {
-    // const [isAuthenticated, setIsAuthenticated] = useState(false);
-    // const [data, setData] = useState(null);
-    // const [isLoading, setIsLoading] = useState(false);
-    // const [error, setError] = useState(null);
-
     e.preventDefault();
 
     const loginData = new FormData(e.target);
-    const userName = loginData.get("name");
-    const userEmail = loginData.get("email");
-    const userPassword = loginData.get("password");
+    const myHeaders = new Headers();
 
-    
     fetchData({
       url: `${API_URL}/auth/register`,
       method: "POST",
-      body: JSON.stringify({
-        name: userName,
-        email: userEmail,
-        password: userPassword,
-      }),
+      headers: myHeaders,
+      body: loginData,
     });
   };
 
@@ -75,12 +64,16 @@ export function FormCreateAccount() {
       navigate("/oops");
     }
   }
-  
+
   return (
-    <form action="" className="form-create-account" onSubmit={useCreateAccount}>
+    <form
+      className="form-create-account"
+      encType="multipart/form-data"
+      onSubmit={useCreateAccount}
+    >
       <div className="name-create-account">
         <Input type="text" name="name" placeholder="Nombre" required />
-        <Input type="text" name="surname" placeholder="Apellido" />
+        <Input type="file" id="photo" name="photo" accept="image/*" required />
       </div>
       <Input
         type="email"
@@ -168,9 +161,7 @@ export function FormCreateAccount() {
       </div>
       <div className="error-container">
         {error ? (
-          <p className="error-text">
-            El usuario o la contraseña no estan registrados...
-          </p>
+          <p className="error-text">error...</p>
         ) : (
           <p></p> // Si isLoggedIn es false
         )}

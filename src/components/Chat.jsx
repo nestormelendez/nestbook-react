@@ -10,7 +10,7 @@ export function Chat() {
     <main className="right">
       <section className="right-fixed">
         <header className="right-fixed-header">
-          <span>Contatos</span>
+          <span>Contactos</span>
           <div className="flex">
             <Button onClick={handleClick}>
               <SvgSearch />

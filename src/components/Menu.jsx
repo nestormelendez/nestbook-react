@@ -1,3 +1,5 @@
+import { API_URL } from "../constants";
+import { useAuth } from "../Hooks/useAuth";
 import { handleClick } from "../services/FuntionClick";
 import { ContactChatUser, OptionsMenuHome } from "./Contact-chat-right";
 import {
@@ -26,14 +28,17 @@ import {
 } from "./SvgHomeHeader";
 
 export function Menu() {
+  const { userData } = useAuth();
+  console.log(userData);
+
   return (
     <main className="left">
       <section className="left-fixed">
         <aside className="container-menu">
           <header className="left-fixed-header">
             <ContactChatUser
-              name={"Nestor Melendez"}
-              urlImage={"./src/assets/nestor.jpg"}
+              name={userData.name}
+              urlImage={`${API_URL}/${userData.photo}`}
               onClick={handleClick}
             />
           </header>

@@ -9,7 +9,7 @@ import {
   SvgMarket,
   SvgVideo,
 } from "./SvgHomeHeader";
-export function HeaderHome() {
+export function HeaderHome({ setSearch }) {
   return (
     <header className="container-home-header">
       <article className="content-search">
@@ -21,6 +21,7 @@ export function HeaderHome() {
           type={"search"}
           placeholder={"Busqueda en Facebook"}
           name={"inputsearch"}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </article>
 

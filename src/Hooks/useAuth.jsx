@@ -11,7 +11,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [data, setData] = useState(null);
+  const [userData, setUserData] = useState("hola");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -22,7 +22,6 @@ export const AuthProvider = ({ children }) => {
     const userEmail = loginData.get("userEmail");
     const userPassword = loginData.get("userPassword");
 
-    
     let token = "";
     const myHeaderLogin = new Headers();
     myHeaderLogin.append("Content-type", "application/json");
@@ -41,13 +40,48 @@ export const AuthProvider = ({ children }) => {
         throw new Error(`Error al realizar la petición: ${response.status}`);
       }
       const data = await response.json();
-      setData(data);
+      console.log(data);
       token = data.token;
       console.log(token);
-      console.log(data);
       if (token) {
+        console.log(data);
         setIsAuthenticated(true);
+        setUserData(data.user);
         localStorage.setItem("token", token);
+        navigate("/home");
+      } else {
+        navigate("/oops");
+      }
+    } catch (error) {
+      setError(error);
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const reload = async () => {
+    const token = localStorage.getItem("token");
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${token}`);
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/auth/me`, requestOptions);
+      if (!response.ok) {
+        throw new Error(`Error al realizar la petición: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data) {
+        console.log(data);
+        setIsAuthenticated(true);
+        const userActive = data.user;
+        setUserData(userActive);
         navigate("/home");
       } else {
         navigate("/oops");
@@ -67,9 +101,9 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
+    setUserData(null);
     navigate("/");
   };
-  console.log(data);
   return (
     <AuthContext.Provider
       value={{
@@ -79,6 +113,8 @@ export const AuthProvider = ({ children }) => {
         logout,
         isLoading,
         error,
+        userData,
+        reload,
       }}
     >
       {children}

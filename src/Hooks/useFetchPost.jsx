@@ -1,25 +1,26 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-const useFetchCreateAccocunt = () => {
-  const [data, setData] = useState(null);
+const useFetchPosts = () => {
+  const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchData = async (config) => {
-    console.log(config);
+  const fetchPosts = async (config) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(config.url, {
+
+        const response = await fetch(config.url, {
         method: config.method || "GET",
         headers: config.headers || { "Content-Type": "application/json" },
-        body: config.body,
+        body: config.body || null,
         redirect: "follow",
       });
       if (!response.ok) {
         throw new Error(`Error al realizar la petición: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data)
       setData(data);
     } catch (error) {
       setError(error);
@@ -27,8 +28,7 @@ const useFetchCreateAccocunt = () => {
       setIsLoading(false);
     }
   };
-
-  return { data, isLoading, error, fetchData };
+  return { data, isLoading, error, fetchPosts };
 };
 
-export default useFetchCreateAccocunt;
+export default useFetchPosts;
