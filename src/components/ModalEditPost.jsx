@@ -11,7 +11,7 @@ export function ModalEditPost({ postId, content }) {
   console.log(content);
   const [showModal, setShowModal] = useState(false);
   const [newContent, setNewContent] = useState(content);
-  const { userData } = useAuth();
+  const { userData, editPostFromContext } = useAuth();
   const { isLoading, error, data, fetchData } = useFetchCreateAccocunt();
 
   const EditPost = async (e) => {
@@ -37,7 +37,8 @@ export function ModalEditPost({ postId, content }) {
 
   if (data) {
     console.log("hola");
-    location.reload();
+    // location.reload();
+    editPostFromContext(postId, newContent)
   }
 
   const openModal = () => {

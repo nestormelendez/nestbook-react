@@ -6,12 +6,13 @@ import useFetchCreateAccocunt from "../Hooks/useAuthCreateAccount";
 import { API_URL } from "../constants";
 import { AvatarProfile } from "./AvatarProfile";
 
-export function ModalEditComment({ commentId, content }) {
+export function ModalEditComment({ commentId, content, postId }) {
   console.log(commentId);
   console.log(content);
   const [showModal, setShowModal] = useState(false);
   const [newContent, setNewContent] = useState(content);
-  const { userData } = useAuth();
+  const { userData, editCommentFromContext } = useAuth();
+  
   const { isLoading, error, data, fetchData } = useFetchCreateAccocunt();
 
   const EditComment = async (e) => {
@@ -37,7 +38,8 @@ export function ModalEditComment({ commentId, content }) {
 
   if (data) {
     console.log("hola");
-    location.reload();
+    // location.reload();
+    editCommentFromContext(postId, commentId, newContent);
   }
 
   const openModal = () => {

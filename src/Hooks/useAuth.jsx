@@ -18,11 +18,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (e) => {
     e.preventDefault();
-
     const loginData = new FormData(e.target);
     const userEmail = loginData.get("userEmail");
     const userPassword = loginData.get("userPassword");
-
     let token = "";
     const myHeaderLogin = new Headers();
     myHeaderLogin.append("Content-type", "application/json");
@@ -99,6 +97,7 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(true);
     navigate("/home");
   };
+
   const logout = () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
@@ -106,22 +105,65 @@ export const AuthProvider = ({ children }) => {
     navigate("/");
   };
   const deletePostFromContext = (postId) => {
-    setPostsData((s) => s.filter((post) => post.id !== postId));
+    setPostsData((prevPosts) => prevPosts.filter((post) => post.id !== postId));
   };
-  // const newComment = (newCommentData) => {
-  //   setPostsData(prevPosts => {
-  //     return prevPosts.map(post => {
-  //       if (post.id === postId) {
-  //         return {
-  //           ...post,
-  //           comments: [...post.comments, data],
-  //         };
-  //       }
-  //       return post;
-  //     });
-  //   });
-  //   console.log(postsData);
-  // };
+  const deleteCommentFromContext = (postId, commentId) => {
+    setPostsData((prevPosts) =>
+      prevPosts.map((post) => {
+        if (post.id === postId) {
+          // Filtrar el comentario a eliminar
+          return {
+            ...post,
+            comments: post.comments.filter(
+              (comment) => comment.id !== commentId
+            ),
+          };
+        } else {
+          return post;
+        }
+      })
+    );
+  };
+  const editCommentFromContext = (postId, commentId, newText) => {
+    setPostsData((prevPosts) =>
+      prevPosts.map((post) => {
+        if (post.id === postId) {
+          return {
+            ...post,
+            comments: post.comments.map((comment) =>
+              comment.id === commentId ? { ...comment, text: newText } : comment
+            ),
+          };
+        } else {
+          return post;
+        }
+      })
+    );
+  };
+  const editPostFromContext = (postId, newContent) => {
+    setPostsData((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId ? { ...post, content: newContent } : post
+      )
+    );
+  };
+  const newPostFromContext = (newPost) => {
+    setPostsData((prevPosts) => [newPost, ...prevPosts]);
+  };
+  const newCommentFromContext = (postId, newComment) => {
+    setPostsData((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId
+          ? { ...post, comments: [...post.comments, newComment] }
+          : post
+      )
+    );
+  };
+  console.log(isAuthenticated);
+  console.log(isLoading);
+  console.log(error);
+  console.log(userData);
+  console.log(postsData);
   return (
     <AuthContext.Provider
       value={{
@@ -136,6 +178,11 @@ export const AuthProvider = ({ children }) => {
         postsData,
         setPostsData,
         deletePostFromContext,
+        newPostFromContext,
+        editPostFromContext,
+        editCommentFromContext,
+        newCommentFromContext,
+        deleteCommentFromContext,
       }}
     >
       {children}

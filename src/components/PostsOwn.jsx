@@ -25,7 +25,7 @@ export function PostOwn({
   urlImagePublisher,
   postId,
 }) {
-  const { userData, deletePostFromContext } = useAuth();
+  const { userData, deletePostFromContext, newCommentFromContext } = useAuth();
 
   const [inputValue, setInputValue] = useState("");
 
@@ -49,7 +49,9 @@ export function PostOwn({
       body: raw,
     });
     setInputValue("");
-    location.reload();
+
+    // location.reload();
+    newCommentFromContext(postId, inputValue);
   };
 
   const DeletePost = async (e) => {
@@ -70,6 +72,7 @@ export function PostOwn({
   };
   if (data) {
     deletePostFromContext(postId);
+    // location.reload();
   }
 
   const handleInputValue = (e) => {

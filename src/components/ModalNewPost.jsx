@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Button";
 import Input, { InputSearch } from "./Input";
 import { useAuth } from "../Hooks/useAuth";
@@ -8,7 +8,7 @@ import { AvatarProfile } from "./AvatarProfile";
 
 export function ModalNewPost() {
   const [showModal, setShowModal] = useState(false);
-  const { userData } = useAuth();
+  const { userData, newPostFromContext } = useAuth();
   const { isLoading, error, data, fetchData } = useFetchCreateAccocunt();
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -43,10 +43,14 @@ export function ModalNewPost() {
       body: loginData,
     });
   };
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   if (data) {
-    console.log("hola");
-    location.reload();
+    console.log(data);
+    // location.reload();
+    newPostFromContext(data);
   }
 
   const openModal = () => {
@@ -74,7 +78,7 @@ export function ModalNewPost() {
               <section className="post-create-header-user">
                 <AvatarProfile />
                 <h2 className="post-create-header-name">{userData.name}</h2>
-                
+
                 {isLoading ? (
                   <p className="cargando">¡Cargando.....!</p> // Si isLoggedIn es true
                 ) : (
@@ -85,7 +89,6 @@ export function ModalNewPost() {
                 ) : (
                   <p></p> // Si isLoggedIn es false
                 )}
-
               </section>
 
               <div className="input-post-content">

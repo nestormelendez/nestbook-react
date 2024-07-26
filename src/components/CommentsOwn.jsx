@@ -1,4 +1,5 @@
 import { API_URL } from "../constants";
+import { useAuth } from "../Hooks/useAuth";
 import useFetchCreateAccocunt from "../Hooks/useAuthCreateAccount";
 import { BtnOptionsModal } from "./BtnOptionsModal";
 import Button from "./Button";
@@ -12,8 +13,11 @@ export function CommentsOwn({
   handleClickLikes,
   handleClickComment,
   commentId,
+  postId,
 }) {
   const { isLoading, error, data, fetchData } = useFetchCreateAccocunt();
+
+  const { deleteCommentFromContext } = useAuth();
 
   const DeleteComment = async (e) => {
     e.preventDefault();
@@ -34,7 +38,8 @@ export function CommentsOwn({
     }
   };
   if (data) {
-    location.reload();
+    // location.reload();
+    deleteCommentFromContext(postId, commentId);
   }
 
   return (
