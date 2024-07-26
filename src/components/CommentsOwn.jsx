@@ -1,5 +1,8 @@
+import { API_URL } from "../constants";
+import useFetchCreateAccocunt from "../Hooks/useAuthCreateAccount";
+import { BtnOptionsModal } from "./BtnOptionsModal";
 import Button from "./Button";
-import { PostCommentAsideOwnBtn } from "./postCommentAsideOwnBtn";
+import { ModalEditComment } from "./ModalEditComment";
 
 export function CommentsOwn({
   comment,
@@ -10,6 +13,30 @@ export function CommentsOwn({
   handleClickComment,
   commentId,
 }) {
+  const { isLoading, error, data, fetchData } = useFetchCreateAccocunt();
+
+  const DeleteComment = async (e) => {
+    e.preventDefault();
+    const positive = confirm(
+      `Estas seguro de eliminar el comentario ${commentId}?`
+    );
+    if (positive) {
+      let token = localStorage.getItem("token");
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+
+      fetchData({
+        url: `${API_URL}/comments/${commentId}`,
+        method: "DELETE",
+        headers: myHeaders,
+        redirect: "follow",
+      });
+    }
+  };
+  if (data) {
+    location.reload();
+  }
+
   return (
     <div className="post-header-user">
       <section className="photo-profile-avatar-comment-left">
@@ -38,7 +65,14 @@ export function CommentsOwn({
         </div>
       </section>
 
-      <PostCommentAsideOwnBtn commentId={commentId}/>
+      <BtnOptionsModal>
+        <ModalEditComment content={comment} commentId={commentId} />
+        <Button className={"--btn-delete-comment"} onClick={DeleteComment}>
+          Eliminar
+        </Button>
+        {isLoading ? <p className="cargando">Cargando...</p> : ""}
+        {error ? <p className="error-text">Da error </p> : ""}
+      </BtnOptionsModal>
     </div>
   );
 }

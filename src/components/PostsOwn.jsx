@@ -4,7 +4,6 @@ import { handleClick } from "../services/FuntionClick";
 import { AvatarProfile } from "./AvatarProfile";
 import Button from "./Button";
 import { InputCommets } from "./Input";
-import { PostCommentAsideOwnBtn } from "./postCommentAsideOwnBtn";
 import {
   SvgComment,
   SvgCommentCount,
@@ -15,6 +14,8 @@ import {
 } from "./SvgHomeHeader";
 import useFetchCreateAccocunt from "../Hooks/useAuthCreateAccount";
 import { API_URL } from "../constants";
+import { BtnOptionsModal } from "./BtnOptionsModal";
+import { ModalEditPost } from "./ModalEditPost";
 
 export function PostOwn({
   children,
@@ -24,7 +25,7 @@ export function PostOwn({
   urlImagePublisher,
   postId,
 }) {
-  const { userData } = useAuth();
+  const { userData, deletePostFromContext } = useAuth();
 
   const [inputValue, setInputValue] = useState("");
 
@@ -47,11 +48,28 @@ export function PostOwn({
       headers: myHeaders,
       body: raw,
     });
-  };
-
-  if (data) {
     setInputValue("");
     location.reload();
+  };
+
+  const DeletePost = async (e) => {
+    e.preventDefault();
+    const positive = confirm(`Estas seguro de eliminar el post ${postId}?`);
+    if (positive) {
+      let token = localStorage.getItem("token");
+      const myHeaders = new Headers();
+      myHeaders.append("Authorization", `Bearer ${token}`);
+
+      fetchData({
+        url: `${API_URL}/posts/${postId}`,
+        method: "DELETE",
+        headers: myHeaders,
+        redirect: "follow",
+      });
+    }
+  };
+  if (data) {
+    deletePostFromContext(postId);
   }
 
   const handleInputValue = (e) => {
@@ -62,7 +80,7 @@ export function PostOwn({
     <article className="content-post">
       <header className="post-header">
         <div className="post-header-user">
-          <article className="post-header-user-profile">
+          <article className="post-header-profile">
             <AvatarProfile />
             <div className="data-user-post">
               <h2>{publisherName}</h2>
@@ -70,7 +88,15 @@ export function PostOwn({
             </div>
           </article>
           <div className="btns-options">
-            <PostCommentAsideOwnBtn postId={postId} />
+            <BtnOptionsModal>
+              <ModalEditPost postId={postId} content={postContent} />
+              <Button className={"--btn-delete-comment"} onClick={DeletePost}>
+                Eliminar
+              </Button>
+              {isLoading ? <p className="cargando">Cargando...</p> : ""}
+              {error ? <p className="error-text">Da error </p> : ""}
+            </BtnOptionsModal>
+
             <Button className={"btn delete-post"} onClick={handleClick}>
               <SvgXMark />
             </Button>

@@ -1,9 +1,8 @@
 import { handleClick } from "../services/FuntionClick";
+import { BtnOptionsModal } from "./BtnOptionsModal";
 import Button from "./Button";
 import { ContactChatUser } from "./Contact-chat-right";
-import { PostCommentAsideOwnBtn } from "./postCommentAsideOwnBtn";
 import { SvgSearch } from "./SvgHomeHeader";
-
 
 export function Chat() {
   return (
@@ -15,7 +14,17 @@ export function Chat() {
             <Button onClick={handleClick}>
               <SvgSearch />
             </Button>
-            <PostCommentAsideOwnBtn />
+            <BtnOptionsModal>
+              <Button className={"--btn-delete-comment"} onClick={handleClick}>
+                Sonido del mensaje
+              </Button>
+              <Button className={"--btn-delete-comment"} onClick={handleClick}>
+                Mostrar contactos
+              </Button>
+              <Button className={"--btn-delete-comment"} onClick={handleClick}>
+                Privacidad y seguridad
+              </Button>
+            </BtnOptionsModal>
           </div>
         </header>
         <aside className="container-contact">

@@ -1,16 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from "react";
 
 const useFetchPosts = () => {
-  const [data, setData] = useState();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [dataPosts, setDataPosts] = useState([]);
+  const [isLoadingPosts, setIsLoadingPosts] = useState(false);
+  const [errorPosts, setError] = useState(null);
 
   const fetchPosts = async (config) => {
-    setIsLoading(true);
+    setIsLoadingPosts(true);
     setError(null);
     try {
-
-        const response = await fetch(config.url, {
+      const response = await fetch(config.url, {
         method: config.method || "GET",
         headers: config.headers || { "Content-Type": "application/json" },
         body: config.body || null,
@@ -20,15 +19,18 @@ const useFetchPosts = () => {
         throw new Error(`Error al realizar la petición: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data)
-      setData(data);
+      setDataPosts(data);
     } catch (error) {
       setError(error);
     } finally {
-      setIsLoading(false);
+      setIsLoadingPosts(false);
     }
   };
-  return { data, isLoading, error, fetchPosts };
+  useEffect(() => {
+    console.log(dataPosts);
+  }, [dataPosts]);
+
+  return { dataPosts, isLoadingPosts, errorPosts, fetchPosts };
 };
 
 export default useFetchPosts;

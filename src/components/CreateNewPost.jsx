@@ -3,6 +3,7 @@ import { AvatarProfile } from "./AvatarProfile";
 import Button from "./Button";
 import { SvgImage, SvgSmile, SvgVideo } from "./SvgHomeHeader";
 import { ModalNewPost } from "./ModalNewPost.jsx";
+import { BtnOptionsModal } from "./BtnOptionsModal.jsx";
 
 export function CreateNewPost() {
   return (
@@ -11,6 +12,23 @@ export function CreateNewPost() {
         <article className="post-header-user-profile">
           <AvatarProfile />
           <ModalNewPost />
+          <BtnOptionsModal>
+            <Button className={"--btn-hidden-comment"} onClick={handleClick}>
+              Público
+            </Button>
+            <Button className={"--btn-report-comment"} onClick={handleClick}>
+              Amigos
+            </Button>
+            <Button className={"--btn-report-comment"} onClick={handleClick}>
+              Amigos excepto...
+            </Button>
+            <Button className={"--btn-report-comment"} onClick={handleClick}>
+              Amigos concretos
+            </Button>
+            <Button className={"--btn-report-comment"} onClick={handleClick}>
+              Solo yo
+            </Button>
+          </BtnOptionsModal>
         </article>
       </div>
 

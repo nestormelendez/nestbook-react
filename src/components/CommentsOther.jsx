@@ -1,5 +1,6 @@
+import { handleClick } from "../services/FuntionClick";
+import { BtnOptionsModal } from "./BtnOptionsModal";
 import Button from "./Button";
-import { PostCommentAsideOtherBtn } from "./postCommentAsideOtherBtn";
 
 export function CommentsOther({
   comment,
@@ -8,7 +9,7 @@ export function CommentsOther({
   timeAgo,
   handleClickLikes,
   handleClickComment,
-  commentId,
+
 }) {
   return (
     <div className="post-header-user">
@@ -38,7 +39,14 @@ export function CommentsOther({
         </div>
       </section>
 
-      <PostCommentAsideOtherBtn commentId={commentId} />
+      <BtnOptionsModal>
+        <Button className={"--btn-hidden-comment"} onClick={handleClick}>
+          Ocultar comentario
+        </Button>
+        <Button className={"--btn-report-comment"} onClick={handleClick}>
+          Reportar comentarionar
+        </Button>
+      </BtnOptionsModal>
     </div>
   );
 }

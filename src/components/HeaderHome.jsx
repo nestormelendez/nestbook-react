@@ -23,6 +23,7 @@ export function HeaderHome({ setSearch }) {
           name={"inputsearch"}
           onChange={(e) => setSearch(e.target.value)}
         />
+       
       </article>
 
       <article className="content-options">

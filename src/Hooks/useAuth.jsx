@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState("hola");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [postsData, setPostsData] = useState([]);
 
   const login = async (e) => {
     e.preventDefault();
@@ -104,6 +105,23 @@ export const AuthProvider = ({ children }) => {
     setUserData(null);
     navigate("/");
   };
+  const deletePostFromContext = (postId) => {
+    setPostsData((s) => s.filter((post) => post.id !== postId));
+  };
+  // const newComment = (newCommentData) => {
+  //   setPostsData(prevPosts => {
+  //     return prevPosts.map(post => {
+  //       if (post.id === postId) {
+  //         return {
+  //           ...post,
+  //           comments: [...post.comments, data],
+  //         };
+  //       }
+  //       return post;
+  //     });
+  //   });
+  //   console.log(postsData);
+  // };
   return (
     <AuthContext.Provider
       value={{
@@ -115,6 +133,9 @@ export const AuthProvider = ({ children }) => {
         error,
         userData,
         reload,
+        postsData,
+        setPostsData,
+        deletePostFromContext,
       }}
     >
       {children}

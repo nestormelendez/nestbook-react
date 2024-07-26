@@ -4,7 +4,6 @@ import { handleClick } from "../services/FuntionClick";
 import { AvatarProfile } from "./AvatarProfile";
 import Button from "./Button";
 import { InputCommets } from "./Input";
-import { PostCommentAsideOtherBtn } from "./postCommentAsideOtherBtn";
 import {
   SvgComment,
   SvgCommentCount,
@@ -15,6 +14,7 @@ import {
 } from "./SvgHomeHeader";
 import useFetchCreateAccocunt from "../Hooks/useAuthCreateAccount";
 import { API_URL } from "../constants";
+import { BtnOptionsModal } from "./BtnOptionsModal";
 export function PostOther({
   children,
   publisherName,
@@ -61,7 +61,7 @@ export function PostOther({
     <article className="content-post">
       <header className="post-header">
         <div className="post-header-user">
-          <article className="post-header-user-profile">
+          <article className="post-header-profile">
             <AvatarProfile />
             <div className="data-user-post">
               <h2>{publisherName}</h2>
@@ -69,7 +69,14 @@ export function PostOther({
             </div>
           </article>
           <div className="btns-options">
-            <PostCommentAsideOtherBtn postId={postId}/>
+            <BtnOptionsModal>
+              <Button className={"--btn-hidden-comment"} onClick={handleClick}>
+                Ocultar comentario
+              </Button>
+              <Button className={"--btn-report-comment"} onClick={handleClick}>
+                Reportar comentarionar
+              </Button>
+            </BtnOptionsModal>
             <Button className={"btn delete-post"} onClick={handleClick}>
               <SvgXMark />
             </Button>
@@ -80,7 +87,9 @@ export function PostOther({
       <div className="container">
         <span className="post">
           <h3>{postContent}</h3>
-          <h3>OTHER {postId} {publisherName}</h3>
+          <h3>
+            OTHER {postId} {publisherName}
+          </h3>
           {/* Colcar una condicion aqui si hay o no post */}
           <img className="img-post" src={urlImagePublisher} alt={postContent} />
         </span>
