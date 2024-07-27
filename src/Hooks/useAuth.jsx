@@ -199,23 +199,19 @@ export const AuthProvider = ({ children }) => {
     const horas = Math.round(minutos / 60);
     const dias = Math.round(horas / 24);
     const anios = Math.round(dias / 365);
-  
+
     if (anios > 0) {
-      return `hace ${anios} ${anios === 1 ? "año" : "años"}`;
+      return `${anios} ${anios === 1 ? "año" : "años"}`;
     } else if (dias > 0) {
-      return `hace ${dias} ${dias === 1 ? "día" : "días"}`;
+      return `${dias} ${dias === 1 ? "día" : "días"}`;
     } else if (horas > 0) {
-      return `hace ${horas} ${horas === 1 ? "hora" : "horas"}`;
+      return `${horas} ${horas === 1 ? "hora" : "horas"}`;
     } else if (minutos > 0) {
-      return `hace ${minutos} ${minutos === 1 ? "minuto" : "minutos"}`;
+      return `${minutos} ${minutos === 1 ? "minuto" : "minutos"}`;
     } else {
-      return `hace ${segundos} ${segundos === 1 ? "segundo" : "segundos"}`;
+      return `${segundos} ${segundos === 1 ? "segundo" : "segundos"}`;
     }
-  }
-
-
-
-
+  };
 
   console.log(isAuthenticated);
   console.log(isLoading);

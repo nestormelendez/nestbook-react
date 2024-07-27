@@ -12,7 +12,7 @@ export function ModalEditComment({ commentId, content, postId }) {
   const [showModal, setShowModal] = useState(false);
   const [newContent, setNewContent] = useState(content);
   const { userData, editCommentFromContext } = useAuth();
-  
+
   const { isLoading, error, data, fetchData } = useFetchCreateAccocunt();
 
   const EditComment = async (e) => {
@@ -75,13 +75,9 @@ export function ModalEditComment({ commentId, content, postId }) {
                 {isLoading ? (
                   <p className="cargando">¡Cargando.....!</p> // Si isLoggedIn es true
                 ) : (
-                  <p></p> // Si isLoggedIn es false
+                  ""
                 )}
-                {error ? (
-                  <p className="error-text">dio error...</p>
-                ) : (
-                  <p></p> // Si isLoggedIn es false
-                )}
+                {error ? <p className="error-text">dio error...</p> : ""}
               </section>
 
               <div className="input-post-content">
@@ -108,7 +104,7 @@ export function ModalEditComment({ commentId, content, postId }) {
           </article>
         </article>
       ) : (
-        <p></p>
+        ""
       )}
     </div>
   );

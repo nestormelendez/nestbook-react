@@ -19,7 +19,7 @@ export function ModalEditPost({ postId, content }) {
     let token = localStorage.getItem("token");
 
     const raw = JSON.stringify({
-      "content": newContent,
+      content: newContent,
     });
 
     const myHeaders = new Headers();
@@ -38,7 +38,7 @@ export function ModalEditPost({ postId, content }) {
   if (data) {
     console.log("hola");
     // location.reload();
-    editPostFromContext(postId, newContent)
+    editPostFromContext(postId, newContent);
   }
 
   const openModal = () => {
@@ -107,7 +107,7 @@ export function ModalEditPost({ postId, content }) {
           </article>
         </article>
       ) : (
-        <p></p>
+        ""
       )}
     </div>
   );

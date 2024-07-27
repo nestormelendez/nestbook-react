@@ -39,7 +39,6 @@ export function Posts({ search }) {
 
   console.log(dataPosts);
   // tengo que traer con fetch los likes y armarlos donde correspondan sus postID
-  // convertir las fechas de creacion de post y comment en hace tanto tiempo... (Moment)
   //funcion de sumar likes
   //funcion de submit comment
 

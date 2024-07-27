@@ -29,40 +29,43 @@ export function CommentsOther({
 
   return (
     <div className="post-header-user">
-      <section className="photo-profile-avatar-comment-left">
-        <img
-          className="photo-profile-avatar-comment"
-          src={`${API_URL}/${urlImage}`}
-          alt={commentator}
-        />
-        <div className="data-user-post">
-          <article className="post-comment-header">
-            <h2> {commentator}</h2>
-            <div className="post-comment">
-              <span>{comment}</span>
-            </div>
-          </article>
 
-          <div className="post-comment-footer">
-            <span>{tiempoTranscurrido}</span>
-            <Button className={"btn"} onClick={handleClickLikes}>
-              <span>Me gusta</span>
-            </Button>
-            <Button className={"btn"} onClick={handleClickComment}>
-              <span>Responder</span>
-            </Button>
+      <section className="photo-profile-avatar-comment-left">
+
+        <div className="comment-header">
+          
+          <img
+            className="photo-profile-avatar-comment"
+            src={`${API_URL}/${urlImage}`}
+            alt={commentator}
+          />
+          <div className="data-user-post">
+            <article className="post-comment-header">
+              <h2> {commentator}</h2>
+              <div className="post-comment">
+                <span>{comment}</span>
+              </div>
+            </article>
           </div>
+          <BtnOptionsModal>
+            <Button className={"--btn-hidden-comment"} onClick={handleClick}>
+              Ocultar comentario
+            </Button>
+            <Button className={"--btn-report-comment"} onClick={handleClick}>
+              Reportar comentarionar
+            </Button>
+          </BtnOptionsModal>
+        </div>
+        <div className="comment-footer">
+          <span>{tiempoTranscurrido}</span>
+          <Button className={"btn"} onClick={handleClickLikes}>
+            <span>Me gusta</span>
+          </Button>
+          <Button className={"btn"} onClick={handleClickComment}>
+            <span>Responder</span>
+          </Button>
         </div>
       </section>
-
-      <BtnOptionsModal>
-        <Button className={"--btn-hidden-comment"} onClick={handleClick}>
-          Ocultar comentario
-        </Button>
-        <Button className={"--btn-report-comment"} onClick={handleClick}>
-          Reportar comentarionar
-        </Button>
-      </BtnOptionsModal>
     </div>
   );
 }
