@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../Hooks/useAuth";
 import { handleClick } from "../services/FuntionClick";
 import { AvatarProfile } from "./AvatarProfile";
@@ -25,34 +25,31 @@ export function PostOwn({
   urlImagePublisher,
   postId,
 }) {
-  const { userData, deletePostFromContext, newCommentFromContext } = useAuth();
+  console.log(timeAgoPost);
+
+  const {
+    userData,
+    deletePostFromContext,
+    CreateNewComment,
+    calcularTiempoTranscurrido,
+  } = useAuth();
 
   const [inputValue, setInputValue] = useState("");
+  // const [tiempoTranscurrido, setTiempoTranscurrido] = useState(timeAgoPost);
+
+  const [tiempoTranscurrido, setTiempoTranscurrido] = useState(
+    calcularTiempoTranscurrido(timeAgoPost)
+  );
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTiempoTranscurrido(calcularTiempoTranscurrido(timeAgoPost));
+    }, 1000); // Actualiza cada segundo
+
+    return () => clearInterval(intervalId); // Limpia al desmontar
+  }, [timeAgoPost]); // Actualiza si timeAgoPost cambia
 
   const { isLoading, error, data, fetchData } = useFetchCreateAccocunt();
-
-  const CreateNewComment = async (e) => {
-    e.preventDefault();
-    let token = localStorage.getItem("token");
-    const raw = JSON.stringify({
-      text: inputValue,
-      postId: postId,
-    });
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${token}`);
-
-    fetchData({
-      url: `${API_URL}/comments`,
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-    });
-    setInputValue("");
-
-    // location.reload();
-    newCommentFromContext(postId, inputValue);
-  };
 
   const DeletePost = async (e) => {
     e.preventDefault();
@@ -78,6 +75,10 @@ export function PostOwn({
   const handleInputValue = (e) => {
     setInputValue(e.target.value);
   };
+  const handleCreateComment = () => {
+    CreateNewComment(postId, inputValue);
+    setInputValue("");
+  };
 
   return (
     <article className="content-post">
@@ -87,7 +88,7 @@ export function PostOwn({
             <AvatarProfile />
             <div className="data-user-post">
               <h2>{publisherName}</h2>
-              <span>{timeAgoPost}</span>
+              <span>{tiempoTranscurrido}</span>
             </div>
           </article>
           <div className="btns-options">
@@ -161,7 +162,10 @@ export function PostOwn({
               value={inputValue}
               onChange={handleInputValue}
             />
-            <Button className={"btn --btn-comment"} onClick={CreateNewComment}>
+            <Button
+              className={"btn --btn-comment"}
+              onClick={handleCreateComment}
+            >
               <SvgPaperPlane />
             </Button>
           </div>

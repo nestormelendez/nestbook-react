@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { API_URL } from "../constants";
 import { useAuth } from "../Hooks/useAuth";
 import useFetchCreateAccocunt from "../Hooks/useAuthCreateAccount";
@@ -41,6 +42,19 @@ export function CommentsOwn({
     // location.reload();
     deleteCommentFromContext(postId, commentId);
   }
+  const { calcularTiempoTranscurrido } = useAuth();
+
+  const [tiempoTranscurrido, setTiempoTranscurrido] = useState(
+    calcularTiempoTranscurrido(timeAgo)
+  );
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTiempoTranscurrido(calcularTiempoTranscurrido(timeAgo));
+    }, 1000); // Actualiza cada segundo
+
+    return () => clearInterval(intervalId); // Limpia al desmontar
+  }, [timeAgo]); // Actualiza si timeAgoPost cambia
 
   return (
     <div className="post-header-user">
@@ -59,7 +73,7 @@ export function CommentsOwn({
           </article>
 
           <div className="post-comment-footer">
-            <span>{timeAgo}</span>
+            <span>{tiempoTranscurrido}</span>
             <Button className={"btn"} onClick={handleClickLikes}>
               <span>Me gusta</span>
             </Button>

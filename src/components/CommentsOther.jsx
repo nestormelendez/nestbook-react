@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { API_URL } from "../constants";
+import { useAuth } from "../Hooks/useAuth";
 import { handleClick } from "../services/FuntionClick";
 import { BtnOptionsModal } from "./BtnOptionsModal";
 import Button from "./Button";
@@ -9,14 +12,27 @@ export function CommentsOther({
   timeAgo,
   handleClickLikes,
   handleClickComment,
-
 }) {
+  const { calcularTiempoTranscurrido } = useAuth();
+
+  const [tiempoTranscurrido, setTiempoTranscurrido] = useState(
+    calcularTiempoTranscurrido(timeAgo)
+  );
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTiempoTranscurrido(calcularTiempoTranscurrido(timeAgo));
+    }, 1000); // Actualiza cada segundo
+
+    return () => clearInterval(intervalId); // Limpia al desmontar
+  }, [timeAgo]); // Actualiza si timeAgoPost cambia
+
   return (
     <div className="post-header-user">
       <section className="photo-profile-avatar-comment-left">
         <img
           className="photo-profile-avatar-comment"
-          src={urlImage}
+          src={`${API_URL}/${urlImage}`}
           alt={commentator}
         />
         <div className="data-user-post">
@@ -28,7 +44,7 @@ export function CommentsOther({
           </article>
 
           <div className="post-comment-footer">
-            <span>{timeAgo}</span>
+            <span>{tiempoTranscurrido}</span>
             <Button className={"btn"} onClick={handleClickLikes}>
               <span>Me gusta</span>
             </Button>

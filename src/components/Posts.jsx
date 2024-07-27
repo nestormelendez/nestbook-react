@@ -2,7 +2,7 @@ import { API_URL } from "../constants";
 import { handleClick } from "../services/FuntionClick";
 import { CommentsOwn } from "./CommentsOwn";
 import { CommentsOther } from "./CommentsOther";
-
+import moment from "moment";
 import { CreateNewPost } from "./CreateNewPost";
 import { useAuth } from "../Hooks/useAuth";
 import { PostOwn } from "./PostsOwn";

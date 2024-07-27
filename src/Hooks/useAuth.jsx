@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../constants";
+import useFetchCreateAccocunt from "./useAuthCreateAccount";
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -9,6 +10,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
+  const { fetchData } = useFetchCreateAccocunt();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState("hola");
@@ -150,15 +152,71 @@ export const AuthProvider = ({ children }) => {
   const newPostFromContext = (newPost) => {
     setPostsData((prevPosts) => [newPost, ...prevPosts]);
   };
-  const newCommentFromContext = (postId, newComment) => {
+  // const newCommentFromContext = (postId, newComment) => {
+  //   setPostsData((prevPosts) =>
+  //     prevPosts.map((post) =>
+  //       post.id === postId
+  //         ? { ...post, comments: [...post.comments, newComment] }
+  //         : post
+  //     )
+  //   );
+  // };
+  const CreateNewComment = async (postId, inputValue) => {
+    let token = localStorage.getItem("token");
+    const raw = JSON.stringify({
+      text: inputValue,
+      postId: postId,
+    });
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    fetchData({
+      url: `${API_URL}/comments`,
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+    });
+
+    // location.reload();
     setPostsData((prevPosts) =>
       prevPosts.map((post) =>
         post.id === postId
-          ? { ...post, comments: [...post.comments, newComment] }
+          ? { ...post, comments: [...post.comments, inputValue] }
           : post
       )
     );
   };
+  const calcularTiempoTranscurrido = (fechaISO8601) => {
+    const fechaPasada = new Date(fechaISO8601); // Convertir a objeto Date
+    const ahora = new Date();
+    const diferenciaEnMilisegundos = ahora - fechaPasada;
+    console.log(fechaPasada);
+    console.log(ahora);
+    console.log(diferenciaEnMilisegundos);
+    const segundos = Math.round(diferenciaEnMilisegundos / 1000);
+    const minutos = Math.round(segundos / 60);
+    const horas = Math.round(minutos / 60);
+    const dias = Math.round(horas / 24);
+    const anios = Math.round(dias / 365);
+  
+    if (anios > 0) {
+      return `hace ${anios} ${anios === 1 ? "año" : "años"}`;
+    } else if (dias > 0) {
+      return `hace ${dias} ${dias === 1 ? "día" : "días"}`;
+    } else if (horas > 0) {
+      return `hace ${horas} ${horas === 1 ? "hora" : "horas"}`;
+    } else if (minutos > 0) {
+      return `hace ${minutos} ${minutos === 1 ? "minuto" : "minutos"}`;
+    } else {
+      return `hace ${segundos} ${segundos === 1 ? "segundo" : "segundos"}`;
+    }
+  }
+
+
+
+
+
   console.log(isAuthenticated);
   console.log(isLoading);
   console.log(error);
@@ -181,8 +239,9 @@ export const AuthProvider = ({ children }) => {
         newPostFromContext,
         editPostFromContext,
         editCommentFromContext,
-        newCommentFromContext,
+        CreateNewComment,
         deleteCommentFromContext,
+        calcularTiempoTranscurrido,
       }}
     >
       {children}
