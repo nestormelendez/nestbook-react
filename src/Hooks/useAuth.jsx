@@ -10,7 +10,7 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const { fetchData } = useFetchCreateAccocunt();
+  const { data, fetchData } = useFetchCreateAccocunt();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState("hola");
@@ -187,6 +187,32 @@ export const AuthProvider = ({ children }) => {
       )
     );
   };
+  const createNewLike = async (postId) => {
+    let id = postId;
+    let token = localStorage.getItem("token");
+    const raw = JSON.stringify({
+      postId: id,
+    });
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    fetchData({
+      url: `${API_URL}/likes`,
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+    });
+
+    // location.reload();
+    setPostsData((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId
+          ? { ...post, likes: [...(post.likes || []), data] }
+          : post
+      )
+    );
+  };
   const calcularTiempoTranscurrido = (fechaISO8601) => {
     const fechaPasada = new Date(fechaISO8601); // Convertir a objeto Date
     const ahora = new Date();
@@ -238,6 +264,7 @@ export const AuthProvider = ({ children }) => {
         CreateNewComment,
         deleteCommentFromContext,
         calcularTiempoTranscurrido,
+        createNewLike,
       }}
     >
       {children}

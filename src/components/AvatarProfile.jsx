@@ -30,7 +30,21 @@ export function AvatarProfile() {
           alt=""
         />
       </Button>
-    
+    </section>
+  );
+}
+
+export function AvatarProfileOther({ image }) {
+  console.log(image)
+  return (
+    <section>
+      <Button>
+        <img
+          className="photo-profile-avatar-contact"
+          src={`${API_URL}/${image}`}
+          alt={image}
+        />
+      </Button>
     </section>
   );
 }

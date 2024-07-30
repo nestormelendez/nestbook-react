@@ -606,6 +606,18 @@ html {
   border-top: 1px solid var(--color-text-btn);
   border-bottom: 1px solid var(--color-text-btn);
 }
+
+.btns-likes-comments svg {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.btns-likes-comments span {
+  width: 100%;
+  font-size: 0.8;
+  display: flex;
+  justify-content: space-around;
+}
 /* Estilos por defecto */
 input[type="file"] {
   padding: 10px 0px;
@@ -638,9 +650,16 @@ input[type="file"]::-webkit-file-upload-button:focus {
   border: none;
 }
 .--btn-post {
-  width: 23%;
+  width: 30%;
   display: flex;
-  justify-content: space-evenly;
+}
+.--btn-post span {
+  width: 100px;
+  font-size: 1em;
+}
+.--btn-post svg {
+  width: 25px;
+  font-size: 0.5em;
 }
 .data-user-post h2 {
   margin: 0;
@@ -927,14 +946,13 @@ input[type="file"]::-webkit-file-upload-button:focus {
   display: flex;
   flex-flow: column wrap;
   width: 80%;
- 
 }
 .photo-profile-avatar-comment {
   border-radius: 50%;
   min-width: 30px;
   max-width: 30px;
   height: 30px;
-  object-fit:  cover;
+  object-fit: cover;
   display: flex;
   justify-content: center;
   align-items: center;

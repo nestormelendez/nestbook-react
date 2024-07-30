@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../Hooks/useAuth";
 import { handleClick } from "../services/FuntionClick";
-import { AvatarProfile } from "./AvatarProfile";
+import { AvatarProfile, AvatarProfileOther } from "./AvatarProfile";
 import Button from "./Button";
 import { InputCommets } from "./Input";
 import {
@@ -22,11 +22,15 @@ export function PostOther({
   postContent,
   urlImagePublisher,
   postId,
+  publisherPhoto,
+  commentCount,
+  commentLikes,
 }) {
-  console.log(timeAgoPost);
+  console.log(commentCount);
 
   const { userData, CreateNewComment, calcularTiempoTranscurrido } = useAuth();
 
+  const { createNewLike } = useAuth();
   const [inputValue, setInputValue] = useState("");
 
   const handleInputValue = (e) => {
@@ -47,13 +51,19 @@ export function PostOther({
 
     return () => clearInterval(intervalId); // Limpia al desmontar
   }, [timeAgoPost]); // Actualiza si timeAgoPost cambia
+  console.log(publisherPhoto);
+
+  const handleLikes = async (e) => {
+    createNewLike(postId);
+  };
 
   return (
     <article className="content-post">
       <header className="post-header">
         <div className="post-header-user">
           <article className="post-header-profile">
-            <AvatarProfile />
+            <AvatarProfileOther image={publisherPhoto} />
+
             <div className="data-user-post">
               <h2>{publisherName}</h2>
               <span>{tiempoTranscurrido}</span>
@@ -65,7 +75,7 @@ export function PostOther({
                 Ocultar comentario
               </Button>
               <Button className={"--btn-report-comment"} onClick={handleClick}>
-                Reportar comentarionar
+                Reportar comentario
               </Button>
             </BtnOptionsModal>
             <Button className={"btn delete-post"} onClick={handleClick}>
@@ -87,28 +97,28 @@ export function PostOther({
         <div className="post-likes-comments">
           <div className="flex">
             <SvgThumbsUp width={"1.3em"} fill={"#0866ff"} />
-            <h3>10</h3>
+            <h3>{commentLikes}</h3>
           </div>
           <div className="flex"></div>
           <div className="flex">
             <SvgCommentCount width={"1.3em"} fill={"#b0b2b5"} />
-            <h3>5</h3>
+            <h3>{commentCount}</h3>
           </div>
         </div>
       </div>
 
       <footer className="btns-likes-comments">
-        <Button className={"btn --btn-post btn-like"} onClick={handleClick}>
+        <Button className={"btn --btn-post "} onClick={handleLikes}>
           <SvgThumbsUp width={"1.4em"} fill={"#b0b2b5"} />
           <span>Me gusta</span>
         </Button>
 
-        <Button className={"btn --btn-post btn-like"} onClick={handleClick}>
+        <Button className={"btn --btn-post"} onClick={handleClick}>
           <SvgComment width={"1.4em"} fill={"#b0b2b5"} />
           <span>Comentar</span>
         </Button>
 
-        <Button className={"btn --btn-post btn-like"} onClick={handleClick}>
+        <Button className={"btn --btn-post"} onClick={handleClick}>
           <SvgShare width={"1.4em"} fill={"#b0b2b5"} />
           <span>Compartir</span>
         </Button>

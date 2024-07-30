@@ -46,16 +46,20 @@ export function Posts({ search }) {
     <main className="container-post-header">
       <CreateNewPost />
       {dataPosts ? (
+        
         dataPosts
           .reverse()
           .filter((post) => {
             return post.content.toLowerCase().includes(search.toLowerCase());
           })
           .map((post) => {
+            let commentCount = post.comments.length
+            let commentLikes = post.likes.length
             return post.userId === userData.id ? (
               <PostOwn
                 key={post.id}
                 publisherName={post.user.name}
+               
                 timeAgoPost={post.createdAt}
                 urlImagePublisher={
                   post.image
@@ -64,6 +68,9 @@ export function Posts({ search }) {
                 }
                 postContent={post.content}
                 postId={post.id}
+                commentCount={commentCount}
+                commentLikes={commentLikes}
+
               >
                 {post.comments.reverse().map((comment) => {
                   return comment.userId === userData.id ? (
@@ -97,6 +104,7 @@ export function Posts({ search }) {
               <PostOther
                 key={post.id}
                 publisherName={post.user.name}
+                publisherPhoto={post.user.photo}
                 timeAgoPost={post.createdAt}
                 urlImagePublisher={
                   post.image
@@ -105,8 +113,12 @@ export function Posts({ search }) {
                 }
                 postContent={post.content}
                 postId={post.id}
+                commentCount={commentCount}
+                commentLikes={commentLikes}
+
               >
                 {post.comments.reverse().map((comment) => {
+
                   return comment.userId === userData.id ? (
                     <CommentsOwn
                       key={comment.id}

@@ -52,7 +52,7 @@ export function CommentsOther({
               Ocultar comentario
             </Button>
             <Button className={"--btn-report-comment"} onClick={handleClick}>
-              Reportar comentarionar
+              Reportar comentario
             </Button>
           </BtnOptionsModal>
         </div>

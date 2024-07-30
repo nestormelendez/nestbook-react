@@ -1,11 +1,28 @@
 @media screen and (max-width: 430px) {
   :root {
     margin: 0;
+    height: 100dvh;
   }
- 
-
+ .content-img-post-preview{
+  width: 100%;
+  height: auto;
+ }
+ .--btn-post {
+  width: 30%;
+  display: flex;
+  justify-content: space-evenly;
+}
+.--btn-post span {
+  width: 100px;
+  font-size: 0.7em;
+}
+.--btn-post svg {
+  width: 25px;
+  font-size: 0.5em;
+}
   .login {
     width: 250px;
+    height: 100dvh;
   }
   .container-login {
     width: 100%;
@@ -129,6 +146,11 @@
   }
 }
 @media screen and (max-width: 600px) {
+  
+  .login {
+    width: 250px;
+    height: 100dvh;
+  }
   .content-options {
     display: none;
   }
@@ -181,6 +203,9 @@
   }
   .container-home-posts {
     justify-content: space-around;
+  }
+  .container-login {
+   scale: 0.9;
   }
 }
 
