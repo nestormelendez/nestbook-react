@@ -25,7 +25,8 @@ export function PostOwn({
   urlImagePublisher,
   postId,
   commentCount,
-  commentLikes,
+  postLikes,
+  likeId,
 }) {
   console.log(timeAgoPost);
 
@@ -34,15 +35,25 @@ export function PostOwn({
     deletePostFromContext,
     CreateNewComment,
     calcularTiempoTranscurrido,
+    createNewLike,
+    deleteLikeAction,
   } = useAuth();
-  const { createNewLike } = useAuth();
 
   const [inputValue, setInputValue] = useState("");
-  // const [tiempoTranscurrido, setTiempoTranscurrido] = useState(timeAgoPost);
+
+  const [isLiked, setIsLiked] = useState(false);
+
+  const [inputComment, setInputComment] = useState(false);
 
   const [tiempoTranscurrido, setTiempoTranscurrido] = useState(
     calcularTiempoTranscurrido(timeAgoPost)
   );
+
+  useEffect(() => {
+    const userHasLiked = likeId !== null;
+
+    setIsLiked(userHasLiked);
+  }, [isLiked]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -84,6 +95,26 @@ export function PostOwn({
   };
   const handleLikes = async (e) => {
     createNewLike(postId);
+    setIsLiked(true);
+  };
+  const handleIDontLikes = async (e) => {
+    setIsLiked(false);
+    deleteLikeAction(postId, likeId);
+  };
+
+  useEffect(() => {
+    if (inputComment) {
+      setTimeout(() => {
+        const inputRef = document.getElementById(`input-comment-${postId}`);
+        if (inputRef) {
+          inputRef.focus();
+        }
+      }, 0);
+    }
+  }, [inputComment, postId]);
+
+  const handleInputCommet = () => {
+    setInputComment(true);
   };
 
   return (
@@ -126,7 +157,7 @@ export function PostOwn({
         <div className="post-likes-comments">
           <div className="flex">
             <SvgThumbsUp width={"1.3em"} fill={"#0866ff"} />
-            <h3>{commentLikes}</h3>
+            <h3>{postLikes ? postLikes : 0}</h3>
           </div>
           <div className="flex">
             {isLoading ? <p className="cargando">Cargando...</p> : <p></p>}
@@ -140,17 +171,23 @@ export function PostOwn({
       </div>
 
       <footer className="btns-likes-comments">
-        <Button className={"btn --btn-post btn-like"} onClick={handleLikes}>
-          <SvgThumbsUp width={"1.4em"} fill={"#b0b2b5"} />
-          <span>Me gusta</span>
+        <Button
+          className={"btn --btn-post"}
+          onClick={isLiked ? handleIDontLikes : handleLikes}
+          disabled={false}
+        >
+          <SvgThumbsUp width={"1.4em"} fill={isLiked ? "#084cdf" : "#b0b2b5"} />
+          <span className={isLiked ? "me-gusta" : ""}>
+            {isLiked ? "Te gusta" : "Me gusta"}
+          </span>
         </Button>
 
-        <Button className={"btn --btn-post btn-like"} onClick={handleClick}>
+        <Button className={"btn --btn-post"} onClick={handleInputCommet}>
           <SvgComment width={"1.4em"} fill={"#b0b2b5"} />
           <span>Comentar</span>
         </Button>
 
-        <Button className={"btn --btn-post btn-like"} onClick={handleClick}>
+        <Button className={"btn --btn-post"} onClick={handleClick}>
           <SvgShare width={"1.4em"} fill={"#b0b2b5"} />
           <span>Compartir</span>
         </Button>
@@ -167,6 +204,7 @@ export function PostOwn({
               placeholder={`Comentar como ${userData.name}`}
               value={inputValue}
               onChange={handleInputValue}
+              id={`input-comment-${postId}`}
             />
             <Button
               className={"btn --btn-comment"}

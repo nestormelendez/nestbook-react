@@ -13,6 +13,7 @@
 /* UTILITIES */
 
 /* ////////////////////////// */
+
 #root {
   max-width: 1768px;
   margin: 0;
@@ -621,6 +622,9 @@ html {
 /* Estilos por defecto */
 input[type="file"] {
   padding: 10px 0px;
+}
+.me-gusta{
+  color: #084cdf;
 }
 
 input[type="file"]::file-selector-button {

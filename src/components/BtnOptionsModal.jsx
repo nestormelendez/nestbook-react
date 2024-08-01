@@ -12,17 +12,17 @@ export function BtnOptionsModal({ children }) {
   };
 
   return (
-    <main div className="post-comment-aside" ref={ref}>
+    <main className="post-comment-aside" ref={ref}>
       <Button className={"btn delete-post"} onClick={handleVisibility}>
         <SvgEllipsis />
       </Button>
-      <div
+      <section
         className={`post-comment-aside-other ${
           isVisibility ? `visibility` : ``
         }`}
       >
         {children}
-      </div>
+      </section>
     </main>
   );
 }

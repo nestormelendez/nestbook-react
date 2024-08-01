@@ -1,4 +1,3 @@
-
 const Button = ({ children, type, onClick, disabled, className }) => {
   // children: El texto o contenido del botón
   // type: Tipo de botón (button, submit, reset)
@@ -8,7 +7,7 @@ const Button = ({ children, type, onClick, disabled, className }) => {
 
   return (
     <button
-      type={type || 'button'} // Tipo predeterminado es 'button'
+      type={type || "button"} // Tipo predeterminado es 'button'
       onClick={onClick}
       disabled={disabled}
       className={`btn ${className}`} // Combina la clase 'button' con la clase personalizada

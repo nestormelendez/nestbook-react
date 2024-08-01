@@ -213,6 +213,37 @@ export const AuthProvider = ({ children }) => {
       )
     );
   };
+
+  const deleteLikeAction = async (postId, likeId) => {
+    console.log(postId);
+    console.log(likeId);
+    let token = localStorage.getItem("token");
+
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Authorization", `Bearer ${token}`);
+
+    fetchData({
+      url: `${API_URL}/likes/${likeId}`,
+      method: "DELETE",
+      headers: myHeaders,
+    });
+
+    // location.reload();
+    setPostsData((prevPosts) =>
+      prevPosts.map((post) => {
+        if (post.id === postId) {
+          // Filtrar el comentario a eliminar
+          return {
+            ...post,
+            likes: post.likes.filter((like) => like.id !== likeId),
+          };
+        } else {
+          return post;
+        }
+      })
+    );
+  };
   const calcularTiempoTranscurrido = (fechaISO8601) => {
     const fechaPasada = new Date(fechaISO8601); // Convertir a objeto Date
     const ahora = new Date();
@@ -265,6 +296,7 @@ export const AuthProvider = ({ children }) => {
         deleteCommentFromContext,
         calcularTiempoTranscurrido,
         createNewLike,
+        deleteLikeAction,
       }}
     >
       {children}

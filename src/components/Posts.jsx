@@ -2,7 +2,6 @@ import { API_URL } from "../constants";
 import { handleClick } from "../services/FuntionClick";
 import { CommentsOwn } from "./CommentsOwn";
 import { CommentsOther } from "./CommentsOther";
-import moment from "moment";
 import { CreateNewPost } from "./CreateNewPost";
 import { useAuth } from "../Hooks/useAuth";
 import { PostOwn } from "./PostsOwn";
@@ -34,32 +33,26 @@ export function Posts({ search }) {
   if (errorPosts) {
     return <div>Error al obtener los Posts: {errorPosts.message}</div>;
   }
-
-  console.log(dataPosts);
-
-  console.log(dataPosts);
-  // tengo que traer con fetch los likes y armarlos donde correspondan sus postID
-  //funcion de sumar likes
-  //funcion de submit comment
-
+console.log(dataPosts)
   return (
     <main className="container-post-header">
       <CreateNewPost />
       {dataPosts ? (
-        
         dataPosts
           .reverse()
           .filter((post) => {
             return post.content.toLowerCase().includes(search.toLowerCase());
           })
           .map((post) => {
-            let commentCount = post.comments.length
-            let commentLikes = post.likes.length
-            return post.userId === userData.id ? (
+            let commentCount = post.comments.length;
+            let postLikes = post.likes.length;
+            let currentUserId = userData.id
+            let userLike = post.likes.find(like => like.userId === currentUserId)
+            let likeId = userLike ? userLike.id : null
+            return post.userId === userData.id && post.id !== 1 && post.id !== 2 ? (
               <PostOwn
                 key={post.id}
                 publisherName={post.user.name}
-               
                 timeAgoPost={post.createdAt}
                 urlImagePublisher={
                   post.image
@@ -69,8 +62,8 @@ export function Posts({ search }) {
                 postContent={post.content}
                 postId={post.id}
                 commentCount={commentCount}
-                commentLikes={commentLikes}
-
+                postLikes={postLikes}
+                likeId={likeId}
               >
                 {post.comments.reverse().map((comment) => {
                   return comment.userId === userData.id ? (
@@ -114,11 +107,10 @@ export function Posts({ search }) {
                 postContent={post.content}
                 postId={post.id}
                 commentCount={commentCount}
-                commentLikes={commentLikes}
-
+                postLikes={postLikes}
+                likeId={likeId}
               >
                 {post.comments.reverse().map((comment) => {
-
                   return comment.userId === userData.id ? (
                     <CommentsOwn
                       key={comment.id}

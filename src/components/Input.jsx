@@ -24,7 +24,7 @@ export const InputCommets = ({
   value,
   onChange,
   error,
- 
+  id,
 }) => {
   // type: Tipo de input (text, email, password, etc.)
   // placeholder: Texto de sugerencia dentro del input
@@ -35,6 +35,7 @@ export const InputCommets = ({
 
   return (
     <input
+      id={id}
       type={type}
       placeholder={placeholder}
       name={name}
@@ -42,7 +43,7 @@ export const InputCommets = ({
       onChange={onChange}
       className={`input-comment ${error ? "error" : ""}`} // Agrega la clase 'error' si hay un error
       required={true}
-      />
+    />
   );
 };
 export const InputSearch = ({
@@ -79,7 +80,6 @@ export const InputCreateAccount = ({
   onChange,
   error,
   label,
- 
 }) => {
   // type: Tipo de input (text, email, password, etc.)
   // placeholder: Texto de sugerencia dentro del input
@@ -97,7 +97,6 @@ export const InputCreateAccount = ({
         value={value}
         onChange={onChange}
         className={`input-text ${error ? "error" : ""}`} // Agrega la clase 'error' si hay un error
-     
       />
       {error && <div className="error-message">{error}</div>}
     </div>
