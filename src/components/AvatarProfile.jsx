@@ -35,7 +35,7 @@ export function AvatarProfile() {
 }
 
 export function AvatarProfileOther({ image }) {
-  console.log(image)
+  console.log(image);
   return (
     <section>
       <Button>
@@ -44,6 +44,17 @@ export function AvatarProfileOther({ image }) {
           src={`${API_URL}/${image}`}
           alt={image}
         />
+      </Button>
+    </section>
+  );
+}
+
+export function AvatarProfileChat({ image }) {
+  console.log(image);
+  return (
+    <section>
+      <Button>
+        <img className="photo-profile-avatar-contact" src={`${API_URL}/${image}`} alt={image} />
       </Button>
     </section>
   );

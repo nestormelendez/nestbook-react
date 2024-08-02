@@ -13,7 +13,7 @@ export function BtnOptionsModal({ children }) {
 
   return (
     <main className="post-comment-aside" ref={ref}>
-      <Button className={"btn delete-post"} onClick={handleVisibility}>
+      <Button className={"delete-post"} onClick={handleVisibility}>
         <SvgEllipsis />
       </Button>
       <section

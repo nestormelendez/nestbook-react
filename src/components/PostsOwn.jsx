@@ -93,11 +93,11 @@ export function PostOwn({
     CreateNewComment(postId, inputValue);
     setInputValue("");
   };
-  const handleLikes = async (e) => {
+  const handleLikes = async () => {
     createNewLike(postId);
     setIsLiked(true);
   };
-  const handleIDontLikes = async (e) => {
+  const handleIDontLikes = async () => {
     setIsLiked(false);
     deleteLikeAction(postId, likeId);
   };
@@ -210,7 +210,7 @@ export function PostOwn({
               className={"btn --btn-comment"}
               onClick={handleCreateComment}
             >
-              <SvgPaperPlane />
+              <SvgPaperPlane width={"1em"} />
             </Button>
           </div>
         </div>
