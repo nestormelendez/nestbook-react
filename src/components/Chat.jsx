@@ -8,7 +8,6 @@ import { SvgSearch } from "./SvgHomeHeader";
 import { useAuth } from "../Hooks/useAuth";
 
 export function Chat() {
-
   const { userData } = useAuth();
 
   const [data, setData] = useState(null);
@@ -70,6 +69,7 @@ export function Chat() {
                 info.id !== 2 ? (
                 <ContactChatUser
                   key={info.id}
+                  id={info.id}
                   name={info.name}
                   urlImage={`${API_URL}/${info.photo}`}
                 />
@@ -82,7 +82,6 @@ export function Chat() {
               <span>no hay usuarios</span>
             </div>
           )}
-
         </aside>
       </section>
     </main>

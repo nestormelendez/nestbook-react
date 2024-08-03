@@ -38,8 +38,9 @@ console.log(dataPosts)
     <main className="container-post-header">
       <CreateNewPost />
       {dataPosts ? (
-        dataPosts
+        [...dataPosts]
           .reverse()
+          // .toReversed()
           .filter((post) => {
             return post.content.toLowerCase().includes(search.toLowerCase());
           })

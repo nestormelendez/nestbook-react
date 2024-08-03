@@ -13,10 +13,12 @@ export const AuthProvider = ({ children }) => {
   const { data, fetchData } = useFetchCreateAccocunt();
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userData, setUserData] = useState("hola");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [userData, setUserData] = useState("hola");
   const [postsData, setPostsData] = useState([]);
+  const [arrayChatActives, setArrayChatActives] = useState([]);
+  console.log(arrayChatActives);
 
   const login = async (e) => {
     e.preventDefault();
@@ -41,9 +43,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(`Error al realizar la petición: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
       token = data.token;
-      console.log(token);
       if (token) {
         console.log(data);
         setIsAuthenticated(true);
@@ -152,15 +152,26 @@ export const AuthProvider = ({ children }) => {
   const newPostFromContext = (newPost) => {
     setPostsData((prevPosts) => [newPost, ...prevPosts]);
   };
-  // const newCommentFromContext = (postId, newComment) => {
-  //   setPostsData((prevPosts) =>
-  //     prevPosts.map((post) =>
-  //       post.id === postId
-  //         ? { ...post, comments: [...post.comments, newComment] }
-  //         : post
-  //     )
-  //   );
-  // };
+
+  const newChatActiveContext = (newChatActive) => {
+    setArrayChatActives((prevChats) => {
+      const alreadyExists = prevChats.some(
+        (chat) => chat.id === newChatActive.id
+      );
+      if (!alreadyExists) {
+        return [newChatActive, ...prevChats];
+      } else {
+        return prevChats;
+      }
+    });
+  };
+  const deleteChatActiveContext = (chatId) => {
+    console.log(chatId);
+    setArrayChatActives((prevChats) =>
+      prevChats.filter((chat) => chat.id !== chatId)
+    );
+  };
+
   const CreateNewComment = async (postId, inputValue) => {
     let token = localStorage.getItem("token");
     const raw = JSON.stringify({
@@ -178,7 +189,6 @@ export const AuthProvider = ({ children }) => {
       body: raw,
     });
 
-    // location.reload();
     setPostsData((prevPosts) =>
       prevPosts.map((post) =>
         post.id === postId
@@ -204,7 +214,6 @@ export const AuthProvider = ({ children }) => {
       body: raw,
     });
 
-    // location.reload();
     setPostsData((prevPosts) =>
       prevPosts.map((post) =>
         post.id === postId
@@ -229,11 +238,9 @@ export const AuthProvider = ({ children }) => {
       headers: myHeaders,
     });
 
-    // location.reload();
     setPostsData((prevPosts) =>
       prevPosts.map((post) => {
         if (post.id === postId) {
-          // Filtrar el comentario a eliminar
           return {
             ...post,
             likes: post.likes.filter((like) => like.id !== likeId),
@@ -270,11 +277,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  console.log(isAuthenticated);
-  console.log(isLoading);
-  console.log(error);
-  console.log(userData);
-  console.log(postsData);
   return (
     <AuthContext.Provider
       value={{
@@ -297,6 +299,9 @@ export const AuthProvider = ({ children }) => {
         calcularTiempoTranscurrido,
         createNewLike,
         deleteLikeAction,
+        arrayChatActives,
+        newChatActiveContext,
+        deleteChatActiveContext,
       }}
     >
       {children}

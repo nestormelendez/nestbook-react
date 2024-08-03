@@ -8,10 +8,10 @@ import { AvatarProfile, AvatarProfileChat } from "./AvatarProfile";
 import { SvgPaperPlane, SvgXMark } from "./SvgHomeHeader";
 import { handleClick } from "../services/FuntionClick";
 
-export function ModalChatActive() {
+export function ModalChatActive({ id, name, photo }) {
   // const [showModal, setShowModal] = useState(false);
   // const [newContent, setNewContent] = useState(content);
-  const { userData } = useAuth();
+  const { userData, deleteChatActiveContext } = useAuth();
   const [message, setMessage] = useState("");
   // const { isLoading, error, data, fetchData } = useFetchCreateAccocunt();
 
@@ -54,15 +54,18 @@ export function ModalChatActive() {
   //   setNewContent(e.target.value);
   // };
 
+  const handleOutChatActive = () => {
+    deleteChatActiveContext(id);
+  };
   return (
     <article className="create-chat">
       <section className="input-new-post">
         <section className="chat-header-receiver">
           <div className="chat-profile-receiver">
-            <AvatarProfileChat image={userData.photo} />
-            <h2 className="post-create-header-name">{userData.name}</h2>
+            <AvatarProfileChat image={photo} />
+            <h2 className="post-create-header-name">{name}</h2>
           </div>
-          <Button className={"btn delete-post"} onClick={handleClick}>
+          <Button className={"btn delete-post"} onClick={handleOutChatActive}>
             <SvgXMark />
           </Button>
         </section>
@@ -165,6 +168,13 @@ export function ModalChatActive() {
               <p class="message-received-content">
                 ultimo mensaje Esto es un mensaje de receptor
               </p>
+            </div>
+            <span class="message-received-moment">2 mintos</span>
+          </div>
+          <div class="messageReceived">
+            <div class="photo-text-received">
+              <div class="photo-profile-avatar-comment">foto</div>
+              <p class="message-received-content">amo a mi esposa</p>
             </div>
             <span class="message-received-moment">2 mintos</span>
           </div>

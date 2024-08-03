@@ -54,7 +54,7 @@ export function AvatarProfileChat({ image }) {
   return (
     <section>
       <Button>
-        <img className="photo-profile-avatar-contact" src={`${API_URL}/${image}`} alt={image} />
+        <img className="photo-profile-avatar-contact" src={image} alt={image} />
       </Button>
     </section>
   );
