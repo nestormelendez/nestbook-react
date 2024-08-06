@@ -780,6 +780,21 @@ input[type="file"]::-webkit-file-upload-button:focus {
   justify-content: center;
   align-content: center;
 }
+.chat-active-item {
+  position: relative; /* Para posicionar el indicador */
+  margin-bottom: 10px; /* Espacio entre elementos */
+}
+
+.online-indicator {
+  width: 10px; 
+  height: 10px;
+  border-radius: 50%; /* Forma circular */
+  background-color: green; 
+  position: absolute;
+  top: 50%;
+  right: 10px; /* Ajusta la posición horizontal */
+  transform: translateY(-50%); /* Centra verticalmente */
+}
 .chat-header-receiver {
   width: 100%;
   display: flex;

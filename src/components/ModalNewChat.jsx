@@ -1,62 +1,116 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "./Button";
-import Input, { InputCommets } from "./Input";
+import { InputCommets } from "./Input";
 import { useAuth } from "../Hooks/useAuth";
-import useFetchCreateAccocunt from "../Hooks/useAuthCreateAccount";
-import { API_URL } from "../constants";
-import { AvatarProfile, AvatarProfileChat } from "./AvatarProfile";
+import { AvatarProfileChat } from "./AvatarProfile";
 import { SvgPaperPlane, SvgXMark } from "./SvgHomeHeader";
-import { handleClick } from "../services/FuntionClick";
+import SenderMessage from "./SenderMessage";
+import ReceiveMessage from "./ReceiveMessage";
+import { API_URL } from "../constants";
 
 export function ModalChatActive({ id, name, photo }) {
-  // const [showModal, setShowModal] = useState(false);
-  // const [newContent, setNewContent] = useState(content);
-  const { userData, deleteChatActiveContext } = useAuth();
+  const {
+    userData,
+    deleteChatActiveContext,
+    webSocket,
+    messages,
+    updateChatMessages,
+  } = useAuth();
+  const chatContainerRef = useRef(null);
   const [message, setMessage] = useState("");
-  // const { isLoading, error, data, fetchData } = useFetchCreateAccocunt();
 
-  // const EditPost = async (e) => {
-  //   e.preventDefault();
-  //   let token = localStorage.getItem("token");
+  console.log(userData);
+  console.log(id, name, photo);
+  console.log(message);
+  console.log(messages);
 
-  //   const raw = JSON.stringify({
-  //     content: newContent,
-  //   });
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      console.log(chatContainerRef);
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
-  //   const myHeaders = new Headers();
-  //   myHeaders.append("Content-Type", "application/json");
-  //   myHeaders.append("Authorization", `Bearer ${token}`);
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        myHeaders.append("Authorization", `Bearer ${token}`);
 
-  //   fetchData({
-  //     url: `${API_URL}/posts/${postId}`,
-  //     method: "PUT",
-  //     headers: myHeaders,
-  //     body: raw,
-  //     redirect: "follow",
-  //   });
-  // };
+        const response = await fetch(`${API_URL}/chats/${id}`, {
+          headers: myHeaders,
+        });
 
-  // if (data) {
-  //   console.log("hola");
-  //   // location.reload();
-  //   editPostFromContext(postId, newContent);
-  // }
+        if (!response.ok) {
+          throw new Error(`Error al obtener los mensajes: ${response.status}`);
+        }
 
-  // const openModal = () => {
-  //   setShowModal(true);
-  // };
+        const data = await response.json();
+        updateChatMessages(userData.id, id, data);
+        console.log(data);
+        console.log(userData.id);
+        console.log(id);
+      } catch (error) {
+        console.error("Error al cargar los mensajes:", error);
+      }
+    };
 
-  // const closeModal = () => {
-  //   setShowModal(false);
-  //   setNewContent(content);
-  // };
-  // const handleChangeContent = (e) => {
-  //   setNewContent(e.target.value);
-  // };
+    fetchMessages();
+  }, [id, userData.id]);
+
+  useEffect(() => {
+    if (webSocket) {
+      const messageListener = (event) => {
+        const newMessage = JSON.parse(event.data);
+
+        if (newMessage.chatId === id) {
+          console.log(messages);
+          updateChatMessages(id, newMessage);
+        }
+      };
+
+      webSocket.addEventListener("message", messageListener);
+      return () => {
+        webSocket.removeEventListener("message", messageListener);
+      };
+    }
+  }, [id, webSocket]);
 
   const handleOutChatActive = () => {
     deleteChatActiveContext(id);
   };
+  const handleChangeInputValue = (e) => {
+    setMessage(e.target.value);
+    console.log(webSocket);
+    console.log(messages);
+  };
+  const handleSendMessage = async () => {
+    if (webSocket && webSocket.readyState === webSocket.OPEN && message) {
+      const newMessage = {
+        type: "message",
+        token: localStorage.getItem("token"),
+        text: message,
+        toUserId: id,
+      };
+
+      try {
+        webSocket.send(JSON.stringify(newMessage));
+        console.log(newMessage);
+        updateChatMessages(userData.id, id, newMessage);
+
+        setMessage("");
+        // setMessages((prevMessages) => [...prevMessages, newMessage]);
+      } catch (error) {
+        console.error("Error al enviar o guardar el mensaje:", error);
+      }
+    }
+    console.log(webSocket);
+    console.log(messages);
+  };
+
   return (
     <article className="create-chat">
       <section className="input-new-post">
@@ -69,124 +123,29 @@ export function ModalChatActive({ id, name, photo }) {
             <SvgXMark />
           </Button>
         </section>
-        <section className="container-chat">
-          <div class="messageSend">
-            <p class="message-sender-content">
-              primer mensaje Esto es un mensaje de emisor
-            </p>
-            <span class="message-sender-moment">1 minuto</span>
-          </div>
-
-          <div class="messageReceived">
-            <div class="photo-text-received">
-              <div class="photo-profile-avatar-comment">foto</div>
-              <p class="message-received-content">
-                Esto es un mensaje de receptor
-              </p>
-            </div>
-            <span class="message-received-moment">2 mintos</span>
-          </div>
-          <div class="messageSend">
-            <p class="message-sender-content">Esto es un mensaje de emisor</p>
-            <span class="message-sender-moment">1 minuto</span>
-          </div>
-
-          <div class="messageReceived">
-            <div class="photo-text-received">
-              <div class="photo-profile-avatar-comment">foto</div>
-              <p class="message-received-content">
-                Esto es un mensaje de receptor
-              </p>
-            </div>
-            <span class="message-received-moment">2 mintos</span>
-          </div>
-          <div class="messageSend">
-            <p class="message-sender-content">Esto es un mensaje de emisor</p>
-            <span class="message-sender-moment">1 minuto</span>
-          </div>
-
-          <div class="messageReceived">
-            <div class="photo-text-received">
-              <div class="photo-profile-avatar-comment">foto</div>
-              <p class="message-received-content">
-                Esto es un mensaje de receptor
-              </p>
-            </div>
-            <span class="message-received-moment">2 mintos</span>
-          </div>
-
-          <div class="messageSend">
-            <p class="message-sender-content">Esto es un mensaje de emisor</p>
-            <span class="message-sender-moment">1 minuto</span>
-          </div>
-
-          <div class="messageReceived">
-            <div class="photo-text-received">
-              <div class="photo-profile-avatar-comment">foto</div>
-              <p class="message-received-content">
-                Esto es un mensaje de receptor
-              </p>
-            </div>
-            <span class="message-received-moment">2 mintos</span>
-          </div>
-          <div class="messageSend">
-            <p class="message-sender-content">Esto es un mensaje de emisor</p>
-            <span class="message-sender-moment">1 minuto</span>
-          </div>
-
-          <div class="messageReceived">
-            <div class="photo-text-received">
-              <div class="photo-profile-avatar-comment">foto</div>
-              <p class="message-received-content">
-                Esto es un mensaje de receptor
-              </p>
-            </div>
-            <span class="message-received-moment">2 mintos</span>
-          </div>
-          <div class="messageSend">
-            <p class="message-sender-content">Esto es un mensaje de emisor</p>
-            <span class="message-sender-moment">1 minuto</span>
-          </div>
-
-          <div class="messageReceived">
-            <div class="photo-text-received">
-              <div class="photo-profile-avatar-comment">foto</div>
-              <p class="message-received-content">
-                Esto es un mensaje de receptor
-              </p>
-            </div>
-            <span class="message-received-moment">2 mintos</span>
-          </div>
-          <div class="messageSend">
-            <p class="message-sender-content">Esto es un mensaje de emisor</p>
-            <span class="message-sender-moment">1 minuto</span>
-          </div>
-
-          <div class="messageReceived">
-            <div class="photo-text-received">
-              <div class="photo-profile-avatar-comment">foto</div>
-              <p class="message-received-content">
-                ultimo mensaje Esto es un mensaje de receptor
-              </p>
-            </div>
-            <span class="message-received-moment">2 mintos</span>
-          </div>
-          <div class="messageReceived">
-            <div class="photo-text-received">
-              <div class="photo-profile-avatar-comment">foto</div>
-              <p class="message-received-content">amo a mi esposa</p>
-            </div>
-            <span class="message-received-moment">2 mintos</span>
-          </div>
+        <section className="container-chat" ref={chatContainerRef}>
+          {messages[[userData.id, id].sort().join("-")]?.map((msg, index) =>
+            msg.toUserId === id ? (
+              <SenderMessage key={index} text={msg.text} time={msg.createdAt} />
+            ) : (
+              <ReceiveMessage
+                key={index}
+                text={msg.text}
+                time={msg.createdAt}
+                photo={`${photo}`}
+              />
+            )
+          )}
         </section>
+
         <div className="post-header-user">
           <InputCommets
             type={"text"}
             placeholder={`Comentar como ${userData.name}`}
             value={message}
-            onChange={handleClick}
+            onChange={handleChangeInputValue}
           />
-          <Button className={"btn --btn-chat"}>
+          <Button className={"btn --btn-chat"} onClick={handleSendMessage}>
             <SvgPaperPlane width={"2em"} />
           </Button>
         </div>

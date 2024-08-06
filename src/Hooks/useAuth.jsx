@@ -1,6 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "../constants";
+import { API_URL, WEBSOCKET_URL } from "../constants";
 import useFetchCreateAccocunt from "./useAuthCreateAccount";
 const AuthContext = createContext();
 
@@ -18,7 +18,80 @@ export const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState("hola");
   const [postsData, setPostsData] = useState([]);
   const [arrayChatActives, setArrayChatActives] = useState([]);
-  console.log(arrayChatActives);
+  const [webSocket, setWebSocket] = useState(null);
+
+  const [messages, setMessages] = useState({});
+  const [connecteUsers, setConnecteUsers] = useState([]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      const token = localStorage.getItem("token");
+      initWebSocket(token);
+    }
+  }, [isAuthenticated]);
+  useEffect(() => {
+    if (webSocket) {
+      console.log("WebSocket actualizado:", webSocket);
+      console.log(arrayChatActives);
+
+      webSocket.onopen = () => {
+        console.log(webSocket);
+
+        const objToSend = {
+          type: "connected-users",
+          token: localStorage.getItem("token"), // Asegúrate de tener el token aquí
+        };
+        webSocket.send(JSON.stringify(objToSend));
+      };
+
+      webSocket.onmessage = (event) => {
+        handleWebSocketMessage(event);
+      };
+
+      webSocket.onclose = () => {
+        setWebSocket(null);
+        console.log(webSocket);
+      };
+
+      // Limpieza del WebSocket al desmontar el componente
+      return () => {
+        if (webSocket) {
+          webSocket.close();
+        }
+      };
+    }
+  }, [webSocket]); // Ejecuta cuando webSocket cambie
+
+  const updateChatMessages = (userId, toUserId, newMessage) => {
+    const chatKey = [userId, toUserId].sort().join("-");
+
+    setMessages((prevMessages) => ({
+      ...prevMessages,
+      [chatKey]: [...(prevMessages[chatKey] || []), newMessage],
+    }));
+  };
+
+  function initWebSocket(token) {
+    console.log(token);
+    const ws = new WebSocket(WEBSOCKET_URL);
+    setWebSocket(ws);
+  }
+
+  function handleWebSocketMessage(event) {
+    let data = JSON.parse(event.data);
+    console.log(data);
+    if (data.type === `connected-users`) {
+      console.log(data);
+      setConnecteUsers(data.users);
+    }
+    if (data.type === `message`) {
+      console.log(data.message);
+      updateChatMessages(
+        data.message.userId,
+        data.message.toUserId,
+        data.message
+      );
+    }
+  }
 
   const login = async (e) => {
     e.preventDefault();
@@ -45,7 +118,6 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       token = data.token;
       if (token) {
-        console.log(data);
         setIsAuthenticated(true);
         setUserData(data.user);
         localStorage.setItem("token", token);
@@ -55,7 +127,6 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       setError(error);
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -79,17 +150,16 @@ export const AuthProvider = ({ children }) => {
       }
       const data = await response.json();
       if (data) {
-        console.log(data);
         setIsAuthenticated(true);
         const userActive = data.user;
         setUserData(userActive);
+        console.log(webSocket);
         navigate("/home");
       } else {
         navigate("/oops");
       }
     } catch (error) {
       setError(error);
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -100,10 +170,11 @@ export const AuthProvider = ({ children }) => {
     navigate("/home");
   };
 
-  const logout = () => {
+  const logout = async () => {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
     setUserData(null);
+    webSocket.onclose();
     navigate("/");
   };
   const deletePostFromContext = (postId) => {
@@ -166,7 +237,6 @@ export const AuthProvider = ({ children }) => {
     });
   };
   const deleteChatActiveContext = (chatId) => {
-    console.log(chatId);
     setArrayChatActives((prevChats) =>
       prevChats.filter((chat) => chat.id !== chatId)
     );
@@ -224,8 +294,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const deleteLikeAction = async (postId, likeId) => {
-    console.log(postId);
-    console.log(likeId);
     let token = localStorage.getItem("token");
 
     const myHeaders = new Headers();
@@ -255,9 +323,6 @@ export const AuthProvider = ({ children }) => {
     const fechaPasada = new Date(fechaISO8601); // Convertir a objeto Date
     const ahora = new Date();
     const diferenciaEnMilisegundos = ahora - fechaPasada;
-    console.log(fechaPasada);
-    console.log(ahora);
-    console.log(diferenciaEnMilisegundos);
     const segundos = Math.round(diferenciaEnMilisegundos / 1000);
     const minutos = Math.round(segundos / 60);
     const horas = Math.round(minutos / 60);
@@ -302,6 +367,12 @@ export const AuthProvider = ({ children }) => {
         arrayChatActives,
         newChatActiveContext,
         deleteChatActiveContext,
+        webSocket,
+        messages,
+        setMessages,
+        connecteUsers,
+        initWebSocket,
+        updateChatMessages,
       }}
     >
       {children}

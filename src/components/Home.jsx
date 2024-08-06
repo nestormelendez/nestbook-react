@@ -6,34 +6,24 @@ import { HeaderHome } from "./HeaderHome";
 import { Menu } from "./Menu";
 import { Posts } from "./Posts";
 import { SvgChat } from "./SvgHomeHeader";
-import { useAuth } from "../Hooks/useAuth";
 import ChatActivesList from "./ChatActiveList";
-
-
-
-
-
-
-
-
-
-
-
+import { useAuth } from "../Hooks/useAuth";
 
 function Home() {
   const [search, setSearch] = useState("");
+  const { connecteUsers } = useAuth();
 
   return (
     <main className="home">
       <section className="container-home">
         <HeaderHome setSearch={setSearch} />
         <section className="container-home-posts">
-          <Menu></Menu>
+          <Menu />
           <article className="center">
             <Posts search={search} />
           </article>
-          <ChatActivesList />
-          <Chat></Chat>
+          <ChatActivesList connecteUsers={connecteUsers} />
+          <Chat />
           <Button className={"btn-chat"} onClick={handleClick}>
             <SvgChat />
           </Button>

@@ -7,6 +7,10 @@ import { ContactChatUser } from "./Contact-chat-right";
 import { SvgSearch } from "./SvgHomeHeader";
 import { useAuth } from "../Hooks/useAuth";
 
+
+/* aqui debo implementear el custom hook para al montar este componente escuchar los cambios de los eventos mediante un useEfect
+de esta forma podemos condicionar los cambios al recibir un mesaje  */
+
 export function Chat() {
   const { userData } = useAuth();
 

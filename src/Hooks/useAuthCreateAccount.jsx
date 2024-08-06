@@ -27,6 +27,7 @@ const useFetchCreateAccocunt = () => {
       setIsLoading(false);
     }
   };
+  console.log(data)
 
   return { data, isLoading, error, fetchData };
 };

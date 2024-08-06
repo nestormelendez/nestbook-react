@@ -1,23 +1,25 @@
-import React, { useContext } from "react";
+import React from "react";
 import { ModalChatActive } from "./ModalNewChat";
 import { useAuth } from "../Hooks/useAuth";
 
-const ChatActivesList = React.memo(() => {
+const ChatActivesList = React.memo(({ connectedUsers = [] }) => {
   const { arrayChatActives } = useAuth();
 
   console.log(arrayChatActives);
   return (
     <article className="container-chat-active">
-      {arrayChatActives
-        ? arrayChatActives.map((chatActive) => (
-            <ModalChatActive
-              key={chatActive.id}
-              id={chatActive.id}
-              name={chatActive.name}
-              photo={chatActive.photo}
-            />
-          ))
-        : ""}
+      {arrayChatActives.map((chatActive) => (
+        <div key={chatActive.id} className="chat-active-item">
+          {connectedUsers.includes(chatActive.id) && (
+            <div className="online-indicator"></div>
+          )}
+          <ModalChatActive
+            id={chatActive.id}
+            name={chatActive.name}
+            photo={chatActive.photo}
+          />
+        </div>
+      ))}
     </article>
   );
 });
