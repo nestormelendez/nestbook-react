@@ -22,12 +22,36 @@ export const AuthProvider = ({ children }) => {
 
   const [messages, setMessages] = useState({});
   const [connecteUsers, setConnecteUsers] = useState([]);
+
   useEffect(() => {
     if (isAuthenticated) {
       const token = localStorage.getItem("token");
       initWebSocket(token);
     }
   }, [isAuthenticated]);
+
+  const fetchChatMessages = async (chatId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Authorization", `Bearer ${token}`);
+
+      const response = await fetch(`${API_URL}/chats/${chatId}`, {
+        headers: myHeaders,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al obtener los mensajes: ${response.status}`);
+      }
+
+      const data = await response.json();
+      updateChatMessages(userData.id, chatId, data);
+    } catch (error) {
+      console.error("Error al cargar los mensajes:", error);
+    }
+  };
+
   useEffect(() => {
     if (webSocket) {
       console.log("WebSocket actualizado:", webSocket);
@@ -35,7 +59,9 @@ export const AuthProvider = ({ children }) => {
 
       webSocket.onopen = () => {
         console.log(webSocket);
-
+        arrayChatActives.forEach((chat) => {
+          fetchChatMessages(chat.id);
+        });
         const objToSend = {
           type: "connected-users",
           token: localStorage.getItem("token"), // Asegúrate de tener el token aquí
@@ -68,6 +94,7 @@ export const AuthProvider = ({ children }) => {
       ...prevMessages,
       [chatKey]: [...(prevMessages[chatKey] || []), newMessage],
     }));
+    console.log(messages);
   };
 
   function initWebSocket(token) {
@@ -133,6 +160,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const reload = async () => {
+    // hacer que cuando se haga reload cargen los mensajes  chat a tavez del fetch
     const token = localStorage.getItem("token");
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${token}`);
@@ -154,6 +182,10 @@ export const AuthProvider = ({ children }) => {
         const userActive = data.user;
         setUserData(userActive);
         console.log(webSocket);
+        arrayChatActives.forEach((chat) => {
+          fetchChatMessages(chat.id);
+        });
+        console.log(arrayChatActives);
         navigate("/home");
       } else {
         navigate("/oops");
@@ -236,6 +268,8 @@ export const AuthProvider = ({ children }) => {
       }
     });
   };
+
+
   const deleteChatActiveContext = (chatId) => {
     setArrayChatActives((prevChats) =>
       prevChats.filter((chat) => chat.id !== chatId)

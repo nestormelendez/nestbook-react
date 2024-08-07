@@ -61,23 +61,23 @@ export function ModalChatActive({ id, name, photo }) {
     fetchMessages();
   }, [id, userData.id]);
 
-  useEffect(() => {
-    if (webSocket) {
-      const messageListener = (event) => {
-        const newMessage = JSON.parse(event.data);
+  // useEffect(() => {
+  //   if (webSocket) {
+  //     const messageListener = (event) => {
+  //       const newMessage = JSON.parse(event.data);
 
-        if (newMessage.chatId === id) {
-          console.log(messages);
-          updateChatMessages(id, newMessage);
-        }
-      };
+  //       if (newMessage.chatId === id) {
+  //         console.log(messages);
+  //         updateChatMessages(id, newMessage);
+  //       }
+  //     };
 
-      webSocket.addEventListener("message", messageListener);
-      return () => {
-        webSocket.removeEventListener("message", messageListener);
-      };
-    }
-  }, [id, webSocket]);
+  //     webSocket.addEventListener("message", messageListener);
+  //     return () => {
+  //       webSocket.removeEventListener("message", messageListener);
+  //     };
+  //   }
+  // }, [id, webSocket]);
 
   const handleOutChatActive = () => {
     deleteChatActiveContext(id);
@@ -89,6 +89,8 @@ export function ModalChatActive({ id, name, photo }) {
   };
   const handleSendMessage = async () => {
     if (webSocket && webSocket.readyState === webSocket.OPEN && message) {
+      console.log(webSocket);
+      console.log(messages);
       const newMessage = {
         type: "message",
         token: localStorage.getItem("token"),
@@ -124,12 +126,12 @@ export function ModalChatActive({ id, name, photo }) {
           </Button>
         </section>
         <section className="container-chat" ref={chatContainerRef}>
-          {messages[[userData.id, id].sort().join("-")]?.map((msg, index) =>
+          {messages[[userData.id, id].sort().join("-")]?.map((msg) =>
             msg.toUserId === id ? (
-              <SenderMessage key={index} text={msg.text} time={msg.createdAt} />
+              <SenderMessage key={msg.id} text={msg.text} time={msg.createdAt} />
             ) : (
               <ReceiveMessage
-                key={index}
+                key={msg.id}
                 text={msg.text}
                 time={msg.createdAt}
                 photo={`${photo}`}
