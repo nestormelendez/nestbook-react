@@ -88,12 +88,25 @@ export const AuthProvider = ({ children }) => {
   }, [webSocket]); // Ejecuta cuando webSocket cambie
 
   const updateChatMessages = (userId, toUserId, newMessage) => {
+    console.log({newMessage})
     const chatKey = [userId, toUserId].sort().join("-");
 
-    setMessages((prevMessages) => ({
-      ...prevMessages,
-      [chatKey]: [...(prevMessages[chatKey] || []), newMessage],
-    }));
+    setMessages((prevMessages) => {
+      console.log({prevMessages})
+      console.log([...(prevMessages[chatKey] || []), newMessage])  
+
+      if (Array.isArray(newMessage)) {
+        return {
+          ...prevMessages,
+          [chatKey]: newMessage,
+        }
+      } else {
+        return {
+          ...prevMessages,
+          [chatKey]: [...(prevMessages[chatKey] || []), newMessage],
+        }
+      }
+    });
     console.log(messages);
   };
 

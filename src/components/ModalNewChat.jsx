@@ -61,6 +61,10 @@ export function ModalChatActive({ id, name, photo }) {
     fetchMessages();
   }, [id, userData.id]);
 
+  useEffect(() => {
+    console.log("cualquier cosa");
+  }, []);
+
   // useEffect(() => {
   //   if (webSocket) {
   //     const messageListener = (event) => {
@@ -100,8 +104,15 @@ export function ModalChatActive({ id, name, photo }) {
 
       try {
         webSocket.send(JSON.stringify(newMessage));
-        console.log(newMessage);
-        updateChatMessages(userData.id, id, newMessage);
+        console.log({newMessage});
+        updateChatMessages(userData.id, id, {
+          id: Math.floor(Math.random() * 9999999) + 1,
+          text: message,
+          toUserId: id,
+          userId: userData.id,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
 
         setMessage("");
         // setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -128,7 +139,11 @@ export function ModalChatActive({ id, name, photo }) {
         <section className="container-chat" ref={chatContainerRef}>
           {messages[[userData.id, id].sort().join("-")]?.map((msg) =>
             msg.toUserId === id ? (
-              <SenderMessage key={msg.id} text={msg.text} time={msg.createdAt} />
+              <SenderMessage
+                key={msg.id}
+                text={msg.text}
+                time={msg.createdAt}
+              />
             ) : (
               <ReceiveMessage
                 key={msg.id}
