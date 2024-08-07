@@ -6,7 +6,7 @@ import useFetchCreateAccocunt from "../Hooks/useAuthCreateAccount";
 import { API_URL } from "../constants";
 import { AvatarProfile } from "./AvatarProfile";
 
-export function ModalEditPost({ postId, content }) {
+export function ModalEditPost({ postId, content, onModalClick }) {
   console.log(postId);
   console.log(content);
   const [showModal, setShowModal] = useState(false);
@@ -33,7 +33,7 @@ export function ModalEditPost({ postId, content }) {
       body: raw,
       redirect: "follow",
     });
-    closeModal()
+    closeModal();
   };
 
   useEffect(() => {
@@ -42,15 +42,17 @@ export function ModalEditPost({ postId, content }) {
       // location.reload();
       editPostFromContext(postId, newContent);
     }
-  }, [data])
-  
+  }, [data]);
+
   const openModal = () => {
     setShowModal(true);
+    
   };
 
   const closeModal = () => {
     setShowModal(false);
     setNewContent(content);
+    onModalClick();
   };
   const handleChangeContent = (e) => {
     setNewContent(e.target.value);

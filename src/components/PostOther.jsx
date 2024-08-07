@@ -39,9 +39,11 @@ export function PostOther({
 
   const [inputValue, setInputValue] = useState("");
 
+  const [isLiked, setIsLiked] = useState(false);
+
   const [inputComment, setInputComment] = useState(false);
 
-  const [isLiked, setIsLiked] = useState(false);
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
 
   const [tiempoTranscurrido, setTiempoTranscurrido] = useState(
     calcularTiempoTranscurrido(timeAgoPost)
@@ -59,6 +61,10 @@ export function PostOther({
 
     return () => clearInterval(intervalId); // Limpia al desmontar
   }, [timeAgoPost]); // Actualiza si timeAgoPost cambia
+
+  const handleToggleOptions = () => {
+    setIsOptionsVisible(!isOptionsVisible);
+  };
 
   const handleInputValue = (e) => {
     setInputValue(e.target.value);
@@ -104,11 +110,20 @@ export function PostOther({
             </div>
           </article>
           <div className="btns-options">
-            <BtnOptionsModal>
-              <Button className={"--btn-hidden-comment"} onClick={handleClick}>
+            <BtnOptionsModal
+              isVisible={isOptionsVisible}
+              onVisibilityChange={setIsOptionsVisible}
+            >
+              <Button
+                className={"--btn-hidden-comment"}
+                onClick={handleToggleOptions}
+              >
                 Ocultar comentario
               </Button>
-              <Button className={"--btn-report-comment"} onClick={handleClick}>
+              <Button
+                className={"--btn-report-comment"}
+                onClick={handleToggleOptions}
+              >
                 Reportar comentario
               </Button>
             </BtnOptionsModal>

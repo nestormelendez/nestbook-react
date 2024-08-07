@@ -15,6 +15,8 @@ export function CommentsOther({
 }) {
   const { calcularTiempoTranscurrido } = useAuth();
 
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+
   const [tiempoTranscurrido, setTiempoTranscurrido] = useState(
     calcularTiempoTranscurrido(timeAgo)
   );
@@ -27,13 +29,14 @@ export function CommentsOther({
     return () => clearInterval(intervalId); // Limpia al desmontar
   }, [timeAgo]); // Actualiza si timeAgoPost cambia
 
+  const handleToggleOptions = () => {
+    setIsOptionsVisible(!isOptionsVisible);
+  };
+
   return (
     <div className="post-header-user">
-
       <section className="photo-profile-avatar-comment-left">
-
         <div className="comment-header">
-          
           <img
             className="photo-profile-avatar-comment"
             src={`${API_URL}/${urlImage}`}
@@ -47,11 +50,20 @@ export function CommentsOther({
               </div>
             </article>
           </div>
-          <BtnOptionsModal>
-            <Button className={"--btn-hidden-comment"} onClick={handleClick}>
+          <BtnOptionsModal
+            isVisible={isOptionsVisible}
+            onVisibilityChange={setIsOptionsVisible}
+          >
+            <Button
+              className={"--btn-hidden-comment"}
+              onClick={handleToggleOptions}
+            >
               Ocultar comentario
             </Button>
-            <Button className={"--btn-report-comment"} onClick={handleClick}>
+            <Button
+              className={"--btn-report-comment"}
+              onClick={handleToggleOptions}
+            >
               Reportar comentario
             </Button>
           </BtnOptionsModal>

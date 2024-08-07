@@ -20,6 +20,8 @@ export function CommentsOwn({
 
   const { deleteCommentFromContext } = useAuth();
 
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+
   const DeleteComment = async (e) => {
     e.preventDefault();
     const positive = confirm(
@@ -56,14 +58,12 @@ export function CommentsOwn({
     return () => clearInterval(intervalId); // Limpia al desmontar
   }, [timeAgo]); // Actualiza si timeAgoPost cambia
 
+  const handleToggleOptions = () => {
+    setIsOptionsVisible(!isOptionsVisible);
+  };
   return (
-
-
-
     <div className="post-header-user">
-
       <section className="photo-profile-avatar-comment-left">
-        
         <div className="comment-header">
           <img
             className="photo-profile-avatar-comment"
@@ -78,8 +78,15 @@ export function CommentsOwn({
               </div>
             </article>
           </div>
-          <BtnOptionsModal>
-            <ModalEditComment content={comment} commentId={commentId} />
+          <BtnOptionsModal
+            isVisible={isOptionsVisible}
+            onVisibilityChange={setIsOptionsVisible}
+          >
+            <ModalEditComment
+              content={comment}
+              commentId={commentId}
+              onModalClick={handleToggleOptions}
+            />
             <Button className={"--btn-delete-comment"} onClick={DeleteComment}>
               Eliminar
             </Button>

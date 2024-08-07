@@ -45,6 +45,8 @@ export function PostOwn({
 
   const [inputComment, setInputComment] = useState(false);
 
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+
   const [tiempoTranscurrido, setTiempoTranscurrido] = useState(
     calcularTiempoTranscurrido(timeAgoPost)
   );
@@ -85,7 +87,9 @@ export function PostOwn({
     deletePostFromContext(postId);
     // location.reload();
   }
-
+  const handleToggleOptions = () => {
+    setIsOptionsVisible(!isOptionsVisible);
+  };
   const handleInputValue = (e) => {
     setInputValue(e.target.value);
   };
@@ -129,8 +133,15 @@ export function PostOwn({
             </div>
           </article>
           <div className="btns-options">
-            <BtnOptionsModal>
-              <ModalEditPost postId={postId} content={postContent} />
+            <BtnOptionsModal
+              isVisible={isOptionsVisible}
+              onVisibilityChange={setIsOptionsVisible}
+            >
+              <ModalEditPost
+                postId={postId}
+                content={postContent}
+                onModalClick={handleToggleOptions}
+              />
               <Button className={"--btn-delete-comment"} onClick={DeletePost}>
                 Eliminar
               </Button>

@@ -34,7 +34,7 @@ export function Posts({ search }) {
     return <div>Error al obtener los Posts: {errorPosts.message}</div>;
   }
 
-  console.log({dataPosts})
+  console.log({ dataPosts });
 
   return (
     <main className="container-post-header">
@@ -49,10 +49,14 @@ export function Posts({ search }) {
           .map((post) => {
             let commentCount = post.comments.length;
             let postLikes = post.likes.length;
-            let currentUserId = userData.id
-            let userLike = post.likes.find(like => like.userId === currentUserId)
-            let likeId = userLike ? userLike.id : null
-            return post.userId === userData.id && post.id !== 1 && post.id !== 2 ? (
+            let currentUserId = userData.id;
+            let userLike = post.likes.find(
+              (like) => like.userId === currentUserId
+            );
+            let likeId = userLike ? userLike.id : null;
+            return post.userId === userData.id &&
+              post.id !== 1 &&
+              post.id !== 2 ? (
               <PostOwn
                 key={post.id}
                 publisherName={post.user.name}

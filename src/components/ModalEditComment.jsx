@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Button";
 import Input from "./Input";
 import { useAuth } from "../Hooks/useAuth";
@@ -6,7 +6,7 @@ import useFetchCreateAccocunt from "../Hooks/useAuthCreateAccount";
 import { API_URL } from "../constants";
 import { AvatarProfile } from "./AvatarProfile";
 
-export function ModalEditComment({ commentId, content, postId }) {
+export function ModalEditComment({ commentId, content, postId, onModalClick}) {
   console.log(commentId);
   console.log(content);
   const [showModal, setShowModal] = useState(false);
@@ -34,13 +34,16 @@ export function ModalEditComment({ commentId, content, postId }) {
       body: raw,
       redirect: "follow",
     });
+    closeModal();
   };
 
-  if (data) {
-    console.log("hola");
-    // location.reload();
-    editCommentFromContext(postId, commentId, newContent);
-  }
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      // location.reload();
+      editCommentFromContext(postId, commentId, newContent);
+    }
+  }, [data]);
 
   const openModal = () => {
     setShowModal(true);
@@ -49,6 +52,7 @@ export function ModalEditComment({ commentId, content, postId }) {
   const closeModal = () => {
     setShowModal(false);
     setNewContent(content);
+    onModalClick()
   };
   const handleChangeContent = (e) => {
     setNewContent(e.target.value);
