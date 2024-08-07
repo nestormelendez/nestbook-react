@@ -36,22 +36,22 @@ export function ModalNewPost() {
 
     myHeaders.append("Authorization", `Bearer ${token}`);
 
-    fetchData({
+    await fetchData({
       url: `${API_URL}/posts`,
       method: "POST",
       headers: myHeaders,
       body: loginData,
     });
+    closeModal();
   };
   useEffect(() => {
     console.log(data);
+    if (data) {
+      console.log(data);
+      // location.reload();
+      newPostFromContext(data);
+    }
   }, [data]);
-
-  if (data) {
-    console.log(data);
-    // location.reload();
-    newPostFromContext(data);
-  }
 
   const openModal = () => {
     setShowModal(true);

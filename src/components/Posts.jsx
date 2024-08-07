@@ -26,14 +26,16 @@ export function Posts({ search }) {
     });
   }, [postsData]);
 
-  if (isLoadingPosts) {
-    return <div>Cargando...</div>;
-  }
+  // if (isLoadingPosts) {
+  //   return <div>Cargando...</div>;
+  // }
 
   if (errorPosts) {
     return <div>Error al obtener los Posts: {errorPosts.message}</div>;
   }
-console.log(dataPosts)
+
+  console.log({dataPosts})
+
   return (
     <main className="container-post-header">
       <CreateNewPost />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Button";
 import Input from "./Input";
 import { useAuth } from "../Hooks/useAuth";
@@ -26,21 +26,24 @@ export function ModalEditPost({ postId, content }) {
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${token}`);
 
-    fetchData({
+    await fetchData({
       url: `${API_URL}/posts/${postId}`,
       method: "PUT",
       headers: myHeaders,
       body: raw,
       redirect: "follow",
     });
+    closeModal()
   };
 
-  if (data) {
-    console.log("hola");
-    // location.reload();
-    editPostFromContext(postId, newContent);
-  }
-
+  useEffect(() => {
+    if (data) {
+      console.log("hola");
+      // location.reload();
+      editPostFromContext(postId, newContent);
+    }
+  }, [data])
+  
   const openModal = () => {
     setShowModal(true);
   };
