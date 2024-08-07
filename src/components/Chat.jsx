@@ -7,11 +7,12 @@ import { ContactChatUser } from "./Contact-chat-right";
 import { SvgSearch } from "./SvgHomeHeader";
 import { useAuth } from "../Hooks/useAuth";
 
-
 /* aqui debo implementear el custom hook para al montar este componente escuchar los cambios de los eventos mediante un useEfect
 de esta forma podemos condicionar los cambios al recibir un mesaje  */
 
 export function Chat() {
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+
   const { userData } = useAuth();
 
   const [data, setData] = useState(null);
@@ -42,7 +43,9 @@ export function Chat() {
   }, []);
 
   console.log(data);
-
+  const handleToggleOptions = () => {
+    setIsOptionsVisible(!isOptionsVisible);
+  };
   return (
     <main className="right">
       <section className="right-fixed">
@@ -52,14 +55,26 @@ export function Chat() {
             <Button onClick={handleClick}>
               <SvgSearch />
             </Button>
-            <BtnOptionsModal>
-              <Button className={"--btn-delete-comment"} onClick={handleClick}>
+            <BtnOptionsModal
+              isVisible={isOptionsVisible}
+              onVisibilityChange={setIsOptionsVisible}
+            >
+              <Button
+                className={"--btn-delete-comment"}
+                onClick={handleToggleOptions}
+              >
                 Sonido del mensaje
               </Button>
-              <Button className={"--btn-delete-comment"} onClick={handleClick}>
+              <Button
+                className={"--btn-delete-comment"}
+                onClick={handleToggleOptions}
+              >
                 Mostrar contactos
               </Button>
-              <Button className={"--btn-delete-comment"} onClick={handleClick}>
+              <Button
+                className={"--btn-delete-comment"}
+                onClick={handleToggleOptions}
+              >
                 Privacidad y seguridad
               </Button>
             </BtnOptionsModal>

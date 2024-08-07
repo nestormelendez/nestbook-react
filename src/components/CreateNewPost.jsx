@@ -4,28 +4,37 @@ import Button from "./Button";
 import { SvgImage, SvgSmile, SvgVideo } from "./SvgHomeHeader";
 import { ModalNewPost } from "./ModalNewPost.jsx";
 import { BtnOptionsModal } from "./BtnOptionsModal.jsx";
+import { useState } from "react";
 
 export function CreateNewPost() {
+  
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+  const handleToggleOptions = () => {
+    setIsOptionsVisible(!isOptionsVisible);
+  };
   return (
     <article className="content-post">
       <div className="btns-input-post-options">
         <article className="post-header-user-profile">
           <AvatarProfile />
           <ModalNewPost />
-          <BtnOptionsModal>
-            <Button className={"--btn-hidden-comment"} onClick={handleClick}>
+          <BtnOptionsModal
+           isVisible={isOptionsVisible}
+           onVisibilityChange={setIsOptionsVisible}
+          >
+            <Button className={"--btn-hidden-comment"} onClick={handleToggleOptions}>
               Público
             </Button>
-            <Button className={"--btn-report-comment"} onClick={handleClick}>
+            <Button className={"--btn-report-comment"} onClick={handleToggleOptions}>
               Amigos
             </Button>
-            <Button className={"--btn-report-comment"} onClick={handleClick}>
+            <Button className={"--btn-report-comment"} onClick={handleToggleOptions}>
               Amigos excepto...
             </Button>
-            <Button className={"--btn-report-comment"} onClick={handleClick}>
+            <Button className={"--btn-report-comment"} onClick={handleToggleOptions}>
               Amigos concretos
             </Button>
-            <Button className={"--btn-report-comment"} onClick={handleClick}>
+            <Button className={"--btn-report-comment"} onClick={handleToggleOptions}>
               Solo yo
             </Button>
           </BtnOptionsModal>
