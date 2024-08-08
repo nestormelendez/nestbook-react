@@ -53,6 +53,7 @@ export const InputSearch = ({
   value,
   onChange,
   error,
+  className,
 }) => {
   // type: Tipo de input (text, email, password, etc.)
   // placeholder: Texto de sugerencia dentro del input
@@ -68,7 +69,7 @@ export const InputSearch = ({
       name={name}
       value={value}
       onChange={onChange}
-      className={`input-search ${error ? "error" : ""}`} // Agrega la clase 'error' si hay un error
+      className={`input-search ${className} ${error ? "error" : ""}`} // Agrega la clase 'error' si hay un error
     />
   );
 };

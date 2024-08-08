@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { AvatarProfileLogout } from "./AvatarProfile";
+import { BtnOptionsModalOut } from "./BtnOptionsModal";
 import Button from "./Button";
 import { InputSearch } from "./Input";
 import {
@@ -10,6 +12,10 @@ import {
   SvgVideo,
 } from "./SvgHomeHeader";
 export function HeaderHome({ setSearch }) {
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+  const handleToggleOptions = () => {
+    setIsOptionsVisible(!isOptionsVisible);
+  };
   return (
     <header className="container-home-header">
       <article className="content-search">
@@ -23,7 +29,6 @@ export function HeaderHome({ setSearch }) {
           name={"inputsearch"}
           onChange={(e) => setSearch(e.target.value)}
         />
-       
       </article>
 
       <article className="content-options">
@@ -48,7 +53,12 @@ export function HeaderHome({ setSearch }) {
       </article>
 
       <article className="content-menu">
-        <AvatarProfileLogout />
+        <BtnOptionsModalOut
+          isVisible={isOptionsVisible}
+          onVisibilityChange={setIsOptionsVisible}
+        >
+          <AvatarProfileLogout onModalClick={handleToggleOptions} />
+        </BtnOptionsModalOut>
       </article>
     </header>
   );

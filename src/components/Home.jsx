@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { handleClick } from "../services/FuntionClick";
-import Button from "./Button";
 import { Chat } from "./Chat";
 import { HeaderHome } from "./HeaderHome";
 import { Menu } from "./Menu";
 import { Posts } from "./Posts";
-import { SvgChat } from "./SvgHomeHeader";
 import ChatActivesList from "./ChatActiveList";
 import { useAuth } from "../Hooks/useAuth";
+import { BtnModalSearchContact } from "./BtnOptionsModal";
+import { ModalSearchContact } from "./ModalSearchContact";
 
 function Home() {
   const [search, setSearch] = useState("");
   const { connecteUsers } = useAuth();
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+  const handleToggleOptions = () => {
+    setIsOptionsVisible(!isOptionsVisible);
+  };
 
   return (
     <main className="home">
@@ -24,9 +27,12 @@ function Home() {
           </article>
           <ChatActivesList connecteUsers={connecteUsers} />
           <Chat />
-          <Button className={"btn-chat"} onClick={handleClick}>
-            <SvgChat />
-          </Button>
+          <BtnModalSearchContact
+            isVisible={isOptionsVisible}
+            onVisibilityChange={setIsOptionsVisible}
+          >
+            <ModalSearchContact onModalClick={handleToggleOptions} />
+          </BtnModalSearchContact>
         </section>
       </section>
     </main>

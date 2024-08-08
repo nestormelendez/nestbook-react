@@ -1,18 +1,21 @@
 import { API_URL } from "../constants";
 import { useAuth } from "../Hooks/useAuth";
 import Button from "./Button";
+import { SvgRightFromBracket } from "./SvgHomeHeader";
 
-export function AvatarProfileLogout() {
-  const { logout, userData } = useAuth();
+export function AvatarProfileLogout({ onModalClick }) {
+  const { logout } = useAuth();
+
+  const handleOut = () => {
+    logout();
+    onModalClick();
+  };
 
   return (
-    <section>
-      <Button onClick={logout}>
-        <img
-          className="photo-profile-avatar-contact"
-          src={`${API_URL}/${userData.photo}`}
-          alt=""
-        />
+    <section className="avatar-profile-logout">
+      <Button className={"btn-out"} onClick={handleOut}>
+        <SvgRightFromBracket fill={"#0866ff"} className={"menu-option-out"} />
+        <span>Cerrar sésion</span>
       </Button>
     </section>
   );
