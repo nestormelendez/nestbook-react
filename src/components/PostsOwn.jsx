@@ -159,10 +159,6 @@ export function PostOwn({
       <div className="container">
         <span className="post">
           <h3>{postContent}</h3>
-          <h3>
-            OWN {postId} {publisherName}
-          </h3>
-          {/* Colcar una condicion aqui si hay o no post */}
           <img className="img-post" src={urlImagePublisher} alt={postContent} />
         </span>
         <div className="post-likes-comments">
