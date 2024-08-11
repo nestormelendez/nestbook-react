@@ -4,11 +4,11 @@ import { BtnOptionsModalOut } from "./BtnOptionsModal";
 import Button from "./Button";
 import { InputSearch } from "./Input";
 import {
-  SvgFaceBook,
   SvgGame,
   SvgGroup,
   SvgHome,
   SvgMarket,
+  SvgSocial,
   SvgVideo,
 } from "./SvgHomeHeader";
 export function HeaderHome({ setSearch }) {
@@ -20,12 +20,12 @@ export function HeaderHome({ setSearch }) {
     <header className="container-home-header">
       <article className="content-search">
         <Button>
-          <SvgFaceBook />
+          <SvgSocial />
         </Button>
 
         <InputSearch
           type={"search"}
-          placeholder={"Busqueda en Facebook"}
+          placeholder={"Busqueda de publicación"}
           name={"inputsearch"}
           onChange={(e) => setSearch(e.target.value)}
         />

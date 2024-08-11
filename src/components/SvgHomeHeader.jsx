@@ -48,16 +48,17 @@ export function SvgMarket() {
     </svg>
   );
 }
-export function SvgFaceBook() {
+export function SvgSocial() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="2em">
       <path
         fill="#0866ff"
-        d="M512 256C512 114.6 397.4 0 256 0S0 114.6 0 256C0 376 82.7 476.8 194.2 504.5V334.2H141.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H287V510.1C413.8 494.8 512 386.9 512 256h0z"
+        d="M64 0C28.7 0 0 28.7 0 64L0 352c0 35.3 28.7 64 64 64l96 0 0 80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416 448 416c35.3 0 64-28.7 64-64l0-288c0-35.3-28.7-64-64-64L64 0z"
       />
     </svg>
   );
 }
+
 export function SvgSearch() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em">
