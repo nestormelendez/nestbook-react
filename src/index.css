@@ -808,6 +808,7 @@ input[type="file"]::-webkit-file-upload-button:focus {
   display: flex;
   justify-content: center;
   align-content: center;
+  border: 1px solid gray;
 }
 .search-new-chat {
   display: flex;
@@ -1201,8 +1202,9 @@ input[type="file"]::-webkit-file-upload-button:focus {
   text-align: left;
   display: flex;
   flex-flow: column nowrap;
-  width: 70%;
+  width: 100%;
   margin: 0px;
+  word-break: break-all;
 }
 .message-sender-moment {
   background-color: var(--color-background);
@@ -1262,7 +1264,8 @@ input[type="file"]::-webkit-file-upload-button:focus {
   text-align: left;
   display: flex;
   flex-flow: column nowrap;
-  width: 65%;
+  width: 100%;
+  word-break: break-all;
 }
 
 /* /////////////////////////// */
