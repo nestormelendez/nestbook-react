@@ -30,6 +30,14 @@ export function Posts({ search }) {
   //   return <div>Cargando...</div>;
   // }
 
+  setInterval(() => {
+    fetchPosts({
+      url: `${API_URL}/posts`,
+      method: "GET",
+      headers: myHeaders,
+    });
+    console.log("reload");
+  }, 13 * 60 * 1000);
   if (errorPosts) {
     return <div>Error al obtener los Posts: {errorPosts.message}</div>;
   }
