@@ -77,7 +77,8 @@ export function ModalSearchContact({ onModalClick }) {
               .map((user) => {
                 return user.id !== userData.id &&
                   user.id !== 1 &&
-                  user.id !== 2 ? (
+                  user.id !== 2 &&
+                  user.id !== 3 ? (
                   <SearchChatUser
                     key={user.id}
                     id={user.id}
