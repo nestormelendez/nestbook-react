@@ -85,7 +85,8 @@ export function Chat() {
             data.map((info) => {
               return info.id !== userData.id &&
                 info.id !== 1 &&
-                info.id !== 2 ? (
+                info.id !== 2 &&
+                info.id !== 3 ? (
                 <ContactChatUser
                   key={info.id}
                   id={info.id}

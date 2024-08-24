@@ -56,7 +56,8 @@ export function Posts({ search }) {
             let likeId = userLike ? userLike.id : null;
             return post.userId === userData.id &&
               post.id !== 1 &&
-              post.id !== 2 ? (
+              post.id !== 2 &&
+              post.id !== 3 ? (
               <PostOwn
                 key={post.id}
                 publisherName={post.user.name}
